@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 int main()
 {
-    int n, *isPrime;
+    int n = 0, *isPrime = NULL;
+    printf("Enter n:\n");
     scanf("%d", &n);
     if (n < 0)
         return 0;
@@ -19,5 +21,6 @@ int main()
         if (isPrime[i])
             printf("%d ", i);
     }
+    free(isPrime);
     return 0;
 }

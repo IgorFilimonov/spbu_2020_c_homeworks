@@ -1,12 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 int main()
 {
-    int n, *array, *isNumber;
+    int n = 0, *array = NULL, *isNumber = NULL;
+    printf("Enter n:\n");
     scanf("%d", &n);
     array = (int*)malloc(n * sizeof(int));
     int minimum = 0, maximum = 0;
+    printf("Enter an array:\n");
     for (int i = 0; i < n; i++) {
         scanf("%d", &array[i]);
         if (!i) {
@@ -18,6 +21,7 @@ int main()
         if (array[i] > maximum)
             maximum = array[i];
     }
+
     int range = maximum - minimum + 1;
     isNumber = (int*)malloc(range * sizeof(int));
     memset(isNumber, 0, range * sizeof(int));
@@ -28,5 +32,7 @@ int main()
         isNumber[array[i] - minimum] = 1;
     }
     printf("%d", minimum + answer);
+    free(array);
+    free(isNumber);
     return 0;
 }

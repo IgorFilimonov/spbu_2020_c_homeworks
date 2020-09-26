@@ -15,7 +15,7 @@ int main()
     }
 
     int lineNumber = n / 2, columnNumber = lineNumber, numberOfSteps = 1;
-    for ( ; ; ) {
+    while (1) {
         int stepsLeft = numberOfSteps;
         while (stepsLeft && columnNumber != n - 1) {
             printf("%d ", array[lineNumber][columnNumber]);

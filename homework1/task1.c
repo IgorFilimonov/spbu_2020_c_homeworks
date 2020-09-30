@@ -3,10 +3,10 @@
 
 int main()
 {
-    int n = 0, **array = NULL;
+    int n = 0;
     printf("Enter n:\n");
     scanf("%d", &n);
-    array = (int**)malloc(n * sizeof(int*));
+    int** array = (int**)malloc(n * sizeof(int*));
     printf("Enter an array:\n");
     for (int i = 0; i < n; i++) {
         array[i] = (int*)malloc(n * sizeof(int));
@@ -24,10 +24,7 @@ int main()
         }
         if (!lineNumber && columnNumber == n - 1) {
             printf("%d", array[lineNumber][columnNumber]);
-            for (int i = 0; i < n; i++)
-                free(array[i]);
-            free(array);
-            return 0;
+            break;
         }
         stepsLeft = numberOfSteps;
         while (stepsLeft) {

@@ -1,19 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-void swap(int* a, int* b)
-{
-    int c = *a;
-    *a = *b;
-    *b = c;
-}
+#include "../library/commonUtils/numericOperations.h"
 
 int main()
 {
-    int m = 0, n = 0, *array = NULL;
+    int m = 0, n = 0;
     printf("Enter n and m:\n");
     scanf("%d%d", &m, &n);
-    array = (int*)malloc((m + n) * sizeof(int));
+    int* array = (int*)malloc((m + n) * sizeof(int));
     printf("Enter an array:\n");
     for (int i = 0; i < m + n; i++)
         scanf("%d", &array[i]);

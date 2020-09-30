@@ -18,8 +18,9 @@ int main()
             i++;
             continue;
         }
-        for (int j = i; j < indexOfNextZero; j++)
-           swap(&array[j], &array[j + 1]);
+        for (int j = i; j < indexOfNextZero; j++) {
+            swap(&array[j], &array[j + 1]);
+        }
         indexOfNextZero--;
     }
 

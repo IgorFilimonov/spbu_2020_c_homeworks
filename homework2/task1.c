@@ -1,17 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void generatePartition(int number, int summandIndex, int* partition)
+void generatePartition(int number, int sizeOfPartition, int* partition)
 {
     if (number == 0) {
-        for (int i = 0; i < summandIndex - 1; i++)
+        for (int i = 0; i < sizeOfPartition - 1; i++)
             printf("%d+", partition[i]);
-        printf("%d\n", partition[summandIndex - 1]);
+        printf("%d\n", partition[sizeOfPartition - 1]);
         return;
     }
-    for (int summand = summandIndex != 0 ? partition[summandIndex - 1] : 1; summand <= number; summand++) {
-        partition[summandIndex] = summand;
-        generatePartition(number - summand, summandIndex + 1, partition);
+
+    int additionTerm = 0;
+    if (sizeOfPartition != 0)
+        additionTerm = partition[sizeOfPartition - 1];
+    else
+        additionTerm = 1;
+    for ( ; additionTerm <= number; ++additionTerm) {
+        partition[sizeOfPartition] = additionTerm;
+        generatePartition(number - additionTerm, sizeOfPartition + 1, partition);
     }
 }
 

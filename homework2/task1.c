@@ -4,7 +4,7 @@
 void generatePartition(int number, int sizeOfPartition, int* partition)
 {
     if (number == 0) {
-        for (int i = 0; i < sizeOfPartition - 1; i++)
+        for (int i = 0; i < sizeOfPartition - 1; ++i)
             printf("%d+", partition[i]);
         printf("%d\n", partition[sizeOfPartition - 1]);
         return;
@@ -15,7 +15,7 @@ void generatePartition(int number, int sizeOfPartition, int* partition)
         additionTerm = partition[sizeOfPartition - 1];
     else
         additionTerm = 1;
-    for ( ; additionTerm <= number; ++additionTerm) {
+    for (; additionTerm <= number; ++additionTerm) {
         partition[sizeOfPartition] = additionTerm;
         generatePartition(number - additionTerm, sizeOfPartition + 1, partition);
     }

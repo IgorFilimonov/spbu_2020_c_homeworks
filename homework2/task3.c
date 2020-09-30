@@ -21,7 +21,7 @@ int main()
         for (int j = i; j < indexOfNextZero; ++j) {
             swap(&array[j], &array[j + 1]);
         }
-        indexOfNextZero--;
+        --indexOfNextZero;
     }
 
     for (int i = 0; i < n; ++i)

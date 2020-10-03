@@ -7,7 +7,7 @@ const int maxSize = 1000;
 int main()
 {
     char s1[maxSize], s2[maxSize];
-    for (int i = 0; i < maxSize; i++) {
+    for (int i = 0; i < maxSize; ++i) {
         s1[i] = '0';
         s2[i] = '0';
     }
@@ -17,14 +17,16 @@ int main()
 
     int numberOfOccurrences = 0;
     int firstStringSize = strlen(s1) - 1, secondStringSize = strlen(s2) - 1;
-    for (int i = 0; i < firstStringSize; i++) {
-        for (int j = 0; j < secondStringSize && i + j < firstStringSize; j++) {
+    for (int i = 0; i < firstStringSize; ++i) {
+        for (int j = 0; j < secondStringSize && i + j < firstStringSize; ++j) {
             if (s1[i + j] != s2[j])
                 break;
+
             if (j + 1 == secondStringSize)
-                numberOfOccurrences++;
+                ++numberOfOccurrences;
         }
     }
+
     printf("%d", numberOfOccurrences);
     return 0;
 }

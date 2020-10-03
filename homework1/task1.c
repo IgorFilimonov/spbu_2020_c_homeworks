@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 int main()
 {
@@ -15,7 +16,7 @@ int main()
     }
 
     int lineNumber = n / 2, columnNumber = lineNumber, numberOfSteps = 1;
-    for (; ;) {
+    while (true) {
         int stepsLeft = numberOfSteps;
         while (stepsLeft != 0 && columnNumber != n - 1) {
             printf("%d ", array[lineNumber][columnNumber]);

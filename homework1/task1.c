@@ -52,7 +52,6 @@ int main()
         }
         ++numberOfSteps;
     }
-
     for (int i = 0; i < n; ++i)
         free(array[i]);
     free(array);

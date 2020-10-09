@@ -7,6 +7,7 @@ set(SOURCE_LIB
     library/commonUtils/numericOperations.c
 )
 add_library(library ${SOURCE_LIB})
+add_library(list library/list.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)
@@ -15,5 +16,9 @@ add_executable(task1_3 homework1/task3.c)
 add_executable(task1_4 homework1/task4.c)
 add_executable(task1_5 homework1/task5.c)
 target_link_libraries(task1_5 library)
+
 add_executable(task2_1 homework2/task1.c)
 add_executable(task2_5 homework2/task5.c)
+
+add_executable(task3_1 homework3/task1.c)
+target_link_libraries(task3_1 list)

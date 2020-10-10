@@ -17,16 +17,9 @@ int* convertToArrayOfDigits(int number, int* numberOfDigits)
     return digits;
 }
 
-void bubbleSort(int* array, int sizeOfArray)
+int compare(const void* a, const void* b)
 {
-    for (int i = sizeOfArray - 1; i > 0; --i) {
-        int indexOfMaximum = 0;
-        for (int j = 1; j <= i; ++j) {
-            if (array[j] > array[indexOfMaximum])
-                indexOfMaximum = j;
-        }
-        swap(&array[indexOfMaximum], &array[i]);
-    }
+    return *((int*)a) - *((int*)b);
 }
 
 int main()
@@ -37,16 +30,18 @@ int main()
 
     int numberOfDigits = 0;
     int* digits = convertToArrayOfDigits(number, &numberOfDigits);
-    bubbleSort(digits, numberOfDigits);
+    qsort(digits, numberOfDigits, sizeof(int), compare);
     for (int i = 0; i < numberOfDigits; ++i) {
-        if (digits[i]) {
+        if (digits[i] != 0) {
             swap(&digits[0], &digits[i]);
             break;
         }
     }
 
+    printf("Here is the required number:\n");
     for (int i = 0; i < numberOfDigits; ++i)
         printf("%d", digits[i]);
+
     free(digits);
     return 0;
 }

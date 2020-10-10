@@ -7,10 +7,10 @@ int main()
     int n = 0;
     printf("Enter n:\n");
     scanf("%d", &n);
+
     int* array = (int*)calloc(n, sizeof(int));
     printf("Enter an array:\n");
-    for (int i = 0; i < n; ++i)
-        scanf("%d", &array[i]);
+    scanIntegerArray(array, n);
 
     int indexOfNextZero = n - 1;
     for (int i = 0; i < indexOfNextZero;) {
@@ -18,14 +18,13 @@ int main()
             ++i;
             continue;
         }
-        for (int j = i; j < indexOfNextZero; ++j) {
-            swap(&array[j], &array[j + 1]);
-        }
+        swap(&array[i], &array[indexOfNextZero]);
         --indexOfNextZero;
     }
 
-    for (int i = 0; i < n; ++i)
-        printf("%d ", array[i]);
+    printf("Here is the changed array:\n");
+    printIntegerArray(array, n);
+
     free(array);
     return 0;
 }

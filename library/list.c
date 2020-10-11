@@ -114,7 +114,7 @@ int locate(ListElement* value, List* list)
     return -1; // there is no element with this value
 }
 
-bool delete(List* list, int position)
+bool delete (int position, List* list)
 {
     if (position == 0) {
         if (head(list) == NULL)

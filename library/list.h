@@ -27,7 +27,7 @@ bool insert(ListElement* value, int position, List* list);
 
 int locate(ListElement* value, List* list);
 
-bool delete(List* list, int position);
+bool delete(int position, List* list);
 
 void printListElement(ListElement* element);
 

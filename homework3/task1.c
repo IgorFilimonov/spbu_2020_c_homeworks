@@ -15,7 +15,7 @@ int main()
     printf("Tail: ");
     printListElement(tail(numbers));
 
-    delete(0, numbers);
+    delete(numbers, 0);
     printf("Delete 0: ");
     printList(numbers);
 

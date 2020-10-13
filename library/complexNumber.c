@@ -1,5 +1,4 @@
 #include "complexNumber.h"
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -50,10 +49,10 @@ ComplexNumber* divideComplexNumber(ComplexNumber* dividend, ComplexNumber* divid
         return NULL;
 
     float realPartOfQuotient = dividend->a * divider->a + dividend->b * divider->b;
-    realPartOfQuotient /= (pow(divider->a, 2) + pow(divider->b, 2));
+    realPartOfQuotient /= (divider->a * divider->a + divider->b * divider->b);
 
     float imaginaryPartOfQuotient = dividend->b * divider->a - dividend->a * divider->b;
-    imaginaryPartOfQuotient /= (pow(divider->a, 2) + pow(divider->b, 2));
+    imaginaryPartOfQuotient /= (divider->a * divider->a + divider->b * divider->b);
 
     ComplexNumber* quotient = createComplexNumber(realPartOfQuotient, imaginaryPartOfQuotient);
     return quotient;

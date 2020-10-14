@@ -37,6 +37,13 @@ void makeNumberNotStartingAtZero(int* digits, int numberOfDigits)
     }
 }
 
+void printOutput(int* digits, int sizeOfNumber)
+{
+    printf("Here is the required number:\n");
+    for (int i = 0; i < sizeOfNumber; ++i)
+        printf("%d", digits[i]);
+}
+
 int main()
 {
     long long number = 0;
@@ -52,9 +59,7 @@ int main()
     qsort(digits, sizeOfNumber, sizeof(int), compare);
     makeNumberNotStartingAtZero(digits, sizeOfNumber);
 
-    printf("Here is the required number:\n");
-    for (int i = 0; i < sizeOfNumber; ++i)
-        printf("%d", digits[i]);
+    printOutput(digits, sizeOfNumber);
 
     free(digits);
     return 0;

@@ -17,6 +17,8 @@ add_executable(task1_5 homework1/task5.c)
 target_link_libraries(task1_5 library)
 
 add_executable(task2_1 homework2/task1.c)
+add_executable(task2_3 homework2/task3.c)
+target_link_libraries(task2_3 library)
 add_executable(task2_4 homework2/task4.c)
 target_link_libraries(task2_4 library)
 add_executable(task2_5 homework2/task5.c)

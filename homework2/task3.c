@@ -8,6 +8,7 @@ void readInputData(int* n, int* array)
     scanf("%d", n);
 
     printf("Enter an array:\n");
+    array = (int*)calloc(*n, sizeof(int));
     for (int i = 0; i < *n; ++i)
         scanf("%d", &array[i]);
 }
@@ -23,7 +24,7 @@ void printOutput(int* array, int n)
 int main()
 {
     int n = 0;
-    int* array = (int*)calloc(n, sizeof(int));
+    int* array = NULL;
     readInputData(&n, array);
 
     int indexOfNextZero = n - 1;

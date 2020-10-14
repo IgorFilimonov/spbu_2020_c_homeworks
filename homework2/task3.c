@@ -2,15 +2,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void readInputData(int* n, int* array)
+int* readInputData(int* n)
 {
     printf("Enter n:\n");
     scanf("%d", n);
 
     printf("Enter an array:\n");
-    array = (int*)calloc(*n, sizeof(int));
+    int* array = (int*)calloc(*n, sizeof(int));
     for (int i = 0; i < *n; ++i)
         scanf("%d", &array[i]);
+    return array;
 }
 
 void printOutput(int* array, int n)
@@ -24,8 +25,7 @@ void printOutput(int* array, int n)
 int main()
 {
     int n = 0;
-    int* array = NULL;
-    readInputData(&n, array);
+    int* array = readInputData(&n);
 
     int indexOfNextZero = n - 1;
     for (int i = 0; i < indexOfNextZero;) {

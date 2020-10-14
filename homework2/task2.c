@@ -52,18 +52,23 @@ void countCowsAndBulls(long long number, int* digitsOfSecret, int sizeOfSecret, 
     }
 }
 
+void readSizeOfSecret(int* sizeOfSecretNumber)
+{
+    printf("Enter the size of the secret number (from 4 to 10):\n");
+    while (true) {
+        scanf("%d", sizeOfSecretNumber);
+        if (4 <= *sizeOfSecretNumber && *sizeOfSecretNumber <= 10)
+            break;
+        printf("This number isn't from 4 to 10.\n");
+    }
+}
+
 int main()
 {
     srand(time(0));
 
-    printf("Enter the size of the secret number (from 4 to 10):\n");
     int sizeOfSecretNumber = 0;
-    while (true) {
-        scanf("%d", &sizeOfSecretNumber);
-        if (4 <= sizeOfSecretNumber && sizeOfSecretNumber <= 10)
-            break;
-        printf("This number isn't from 4 to 10.\n");
-    }
+    readSizeOfSecret(&sizeOfSecretNumber);
 
     bool isDigitUsedInSecret[10] = {false};
     int* digitsOfSecretNumber = generateSecretNumber(isDigitUsedInSecret, sizeOfSecretNumber);

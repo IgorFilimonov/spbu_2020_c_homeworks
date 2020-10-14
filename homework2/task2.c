@@ -18,8 +18,7 @@ int* generateSecretNumber(bool* isDigitUsed, int sizeOfSecretNumber)
         int newDigit = 0;
         do {
             newDigit = rand() % 10;
-        }
-        while (isDigitUsed[newDigit] || isZeroTheFirstDigit(i, newDigit));
+        } while (isDigitUsed[newDigit] || isZeroTheFirstDigit(i, newDigit));
 
         digitsOfSecretNumber[i] = newDigit;
         isDigitUsed[newDigit] = true;
@@ -67,8 +66,7 @@ void readSizeOfSecret(int* sizeOfSecretNumber)
         scanf("%d", sizeOfSecretNumber);
         if (*sizeOfSecretNumber < 4 || *sizeOfSecretNumber > 10)
             printf("This number isn't from 4 to 10.\n");
-    }
-    while (*sizeOfSecretNumber < 4 || *sizeOfSecretNumber > 10);
+    } while (*sizeOfSecretNumber < 4 || *sizeOfSecretNumber > 10);
 }
 
 int main()

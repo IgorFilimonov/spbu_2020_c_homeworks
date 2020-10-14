@@ -24,7 +24,7 @@ bool isNumberCorrect(long long number, int sizeOfSecretNumber)
     if (number < 0)
         return false;
 
-    bool isDigitUsed[10] = {false};
+    bool isDigitUsed[10] = { false };
     int sizeOfNumber = 0;
     while (number != 0) {
         if (isDigitUsed[number % 10])
@@ -70,7 +70,7 @@ int main()
     int sizeOfSecretNumber = 0;
     readSizeOfSecret(&sizeOfSecretNumber);
 
-    bool isDigitUsedInSecret[10] = {false};
+    bool isDigitUsedInSecret[10] = { false };
     int* digitsOfSecretNumber = generateSecretNumber(isDigitUsedInSecret, sizeOfSecretNumber);
     printf("The number is conceived. Try to guess. :)\n");
     printf("To do this, enter the natural numbers of the length you specified, in which the digits are not repeated.\n");

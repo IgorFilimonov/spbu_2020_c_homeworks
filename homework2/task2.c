@@ -1,16 +1,25 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+
+const int numberOfDigits = 10;
+
+bool isZeroTheFirstDigit(int position, int digit)
+{
+    return position == 0 && digit == 0;
+}
 
 int* generateSecretNumber(bool* isDigitUsed, int sizeOfSecretNumber)
 {
     int* digitsOfSecretNumber = (int*)calloc(sizeOfSecretNumber, sizeof(int));
     for (int i = 0; i < sizeOfSecretNumber; ++i) {
         int newDigit = 0;
-        do
+        do {
             newDigit = rand() % 10;
-        while (isDigitUsed[newDigit] || i == 0 && newDigit == 0);
+        }
+        while (isDigitUsed[newDigit] || isZeroTheFirstDigit(i, newDigit));
 
         digitsOfSecretNumber[i] = newDigit;
         isDigitUsed[newDigit] = true;
@@ -24,7 +33,8 @@ bool isNumberCorrect(long long number, int sizeOfSecretNumber)
     if (number < 0)
         return false;
 
-    bool isDigitUsed[10] = { false };
+    bool isDigitUsed[numberOfDigits];
+    memset(isDigitUsed, false, numberOfDigits * sizeof(bool));
     int sizeOfNumber = 0;
     while (number != 0) {
         if (isDigitUsed[number % 10])
@@ -35,9 +45,7 @@ bool isNumberCorrect(long long number, int sizeOfSecretNumber)
         number /= 10;
     }
 
-    if (sizeOfNumber != sizeOfSecretNumber)
-        return false;
-    return true;
+    return sizeOfNumber == sizeOfSecretNumber;
 }
 
 void countCowsAndBulls(long long number, int* digitsOfSecret, int sizeOfSecret, bool* isDigitUsedInSecret, int* cows, int* bulls)
@@ -55,12 +63,12 @@ void countCowsAndBulls(long long number, int* digitsOfSecret, int sizeOfSecret, 
 void readSizeOfSecret(int* sizeOfSecretNumber)
 {
     printf("Enter the size of the secret number (from 4 to 10):\n");
-    while (true) {
+    do {
         scanf("%d", sizeOfSecretNumber);
-        if (4 <= *sizeOfSecretNumber && *sizeOfSecretNumber <= 10)
-            break;
-        printf("This number isn't from 4 to 10.\n");
+        if (*sizeOfSecretNumber < 4 || *sizeOfSecretNumber > 10)
+            printf("This number isn't from 4 to 10.\n");
     }
+    while (*sizeOfSecretNumber < 4 || *sizeOfSecretNumber > 10);
 }
 
 int main()
@@ -70,11 +78,14 @@ int main()
     int sizeOfSecretNumber = 0;
     readSizeOfSecret(&sizeOfSecretNumber);
 
-    bool isDigitUsedInSecret[10] = { false };
+    bool isDigitUsedInSecret[numberOfDigits];
+    memset(isDigitUsedInSecret, false, numberOfDigits * sizeof(bool));
     int* digitsOfSecretNumber = generateSecretNumber(isDigitUsedInSecret, sizeOfSecretNumber);
     printf("The number is conceived. Try to guess. :)\n");
     printf("To do this, enter the natural numbers of the length you specified, in which the digits are not repeated.\n");
-    while (true) {
+
+    int cows = 0, bulls = 0;
+    while (bulls != sizeOfSecretNumber) {
         long long number = 0;
         scanf("%lld", &number);
         if (!isNumberCorrect(number, sizeOfSecretNumber)) {
@@ -82,14 +93,11 @@ int main()
             continue;
         }
 
-        int cows = 0, bulls = 0;
         countCowsAndBulls(number, digitsOfSecretNumber, sizeOfSecretNumber, isDigitUsedInSecret, &cows, &bulls);
         printf("%d cows, %d bulls\n", cows, bulls);
-        if (bulls == sizeOfSecretNumber) {
-            printf("You guessed right!");
-
-            free(digitsOfSecretNumber);
-            return 0;
-        }
     }
+
+    printf("You guessed right!");
+    free(digitsOfSecretNumber);
+    return 0;
 }

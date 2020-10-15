@@ -49,6 +49,8 @@ bool isNumberCorrect(long long number, int sizeOfSecretNumber)
 
 void countCowsAndBulls(long long number, int* digitsOfSecret, int sizeOfSecret, bool* isDigitUsedInSecret, int* cows, int* bulls)
 {
+    *cows = 0;
+    *bulls = 0;
     for (int i = 0; i < sizeOfSecret; ++i) {
         if (number % 10 == digitsOfSecret[sizeOfSecret - 1 - i])
             ++(*bulls);

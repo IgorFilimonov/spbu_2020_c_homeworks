@@ -1,10 +1,10 @@
 #include "../library/commonUtils/arrayOperations.h"
 #include "../library/stack.h"
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 double convertStringToNumber(char* string, int* firstDigitIndex)
 {

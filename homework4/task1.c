@@ -2,18 +2,15 @@
 #include "../library/stack.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-
-bool isDigit(char c)
-{
-    return '0' <= c && c <= '9';
-}
+#include <ctype.h>
 
 double convertStringToNumber(char* string, int* firstDigitIndex)
 {
     int i = *firstDigitIndex;
     double number = 0;
-    for (; isDigit(string[i]); ++i) {
+    for (; isdigit(string[i]); ++i) {
         number *= 10;
         number += string[i] - '0';
     }
@@ -30,14 +27,19 @@ void performNumericOperation(Stack* numbers, char operation)
 {
     StackElement* number2 = pop(numbers);
     StackElement* number1 = pop(numbers);
-    if (operation == '+')
+    switch (operation) {
+    case '+':
         push(numbers, createStackElement(getValue(number1) + getValue(number2)));
-    if (operation == '-')
+        break;
+    case '-':
         push(numbers, createStackElement(getValue(number1) - getValue(number2)));
-    if (operation == '*')
+        break;
+    case '*':
         push(numbers, createStackElement(getValue(number1) * getValue(number2)));
-    if (operation == '/')
+        break;
+    case '/':
         push(numbers, createStackElement(getValue(number1) / getValue(number2)));
+    }
 
     deleteStackElement(number1);
     deleteStackElement(number2);
@@ -47,7 +49,7 @@ double calculateExpressionValue(char* expression)
 {
     Stack* numbers = createStack();
     for (int i = 0; i < strlen(expression); ++i) {
-        if (isDigit(expression[i]))
+        if (isdigit(expression[i]))
             push(numbers, createStackElement(convertStringToNumber(expression, &i)));
         if (isOperation(expression[i]))
             performNumericOperation(numbers, expression[i]);
@@ -65,5 +67,6 @@ int main()
     printf("Enter expression in postfix notation:\n");
     char* expression = readString();
     printf("Here is the value of your expression: %lf", calculateExpressionValue(expression));
+    free(expression);
     return 0;
 }

@@ -1,6 +1,5 @@
 #include "../library/list.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 int main()
 {
@@ -15,7 +14,7 @@ int main()
     printf("Tail: ");
     printListElement(tail(numbers));
 
-    delete (0, numbers);
+    deleteFromList(0, numbers);
     printf("Delete 0: ");
     printList(numbers);
 
@@ -27,9 +26,8 @@ int main()
     printf("Insert 5 to position 1: ");
     printList(numbers);
 
-    ListElement* number2 = createListElement(3);
+    ListElement* number2 = retrieve(3, numbers);
     printf("Element with value 3 is at index %d\n", locate(number2, numbers));
-    free(number2);
 
     printf("Element at index 6: ");
     printListElement(retrieve(6, numbers));

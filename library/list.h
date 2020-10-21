@@ -27,8 +27,10 @@ bool insert(ListElement* value, int position, List* list);
 
 int locate(ListElement* value, List* list);
 
-bool delete(int position, List* list);
+bool deleteFromList(int position, List* list);
 
 void printListElement(ListElement* element);
+
+void removeListElement(ListElement* element);
 
 #endif //LIST_LIST_H

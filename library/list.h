@@ -17,8 +17,6 @@ ListElement* tail(List* list);
 
 void printList(List* list);
 
-void addListElement(List* list, ListElement* element);
-
 void removeList(List* list);
 
 ListElement* retrieve(int position, List* list);
@@ -32,5 +30,9 @@ bool deleteFromList(int position, List* list);
 void printListElement(ListElement* element);
 
 void removeListElement(ListElement* element);
+
+ListElement* getNextElement(ListElement* element);
+
+bool makeListCyclical(List* list);
 
 #endif //LIST_LIST_H

@@ -68,9 +68,9 @@ void removeList(List* list)
 {
     ListElement* current = head(list);
     while (current != NULL) {
-        ListElement* copyOfCurrent = current;
+        ListElement* temporary = current;
         current = current->next;
-        removeListElement(copyOfCurrent);
+        removeListElement(temporary);
     }
     free(list);
 }
@@ -124,7 +124,7 @@ int locate(ListElement* value, List* list)
 
 bool deleteFromList(int position, List* list)
 {
-    if (position < 0 || position > list->size - 1 || list->size == 0)
+    if (position < 0 || position > list->size - 1)
         return false;
 
     if (position == 0) {

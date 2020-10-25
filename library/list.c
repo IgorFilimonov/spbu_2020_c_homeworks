@@ -12,6 +12,7 @@ struct List {
     ListElement* head;
     ListElement* tail;
     int size;
+    bool isCyclical;
 };
 
 List* createList()
@@ -20,6 +21,7 @@ List* createList()
     list->head = NULL;
     list->tail = NULL;
     list->size = 0;
+    list->isCyclical = false;
     return list;
 }
 
@@ -45,33 +47,25 @@ void printList(List* list)
 {
     printf("START -> ");
     ListElement* current = head(list);
-    while (current != NULL) {
+    while (current != tail(list)) {
         printf("%d -> ", current->value);
         current = current->next;
     }
+    if (tail(list) != NULL)
+        printf("%d -> ", tail(list)->value);
     printf("END\n");
-}
-
-void addListElement(List* list, ListElement* element)
-{
-    if (head(list) == NULL) {
-        list->head = element;
-        list->tail = element;
-        return;
-    }
-    tail(list)->next = element;
-    list->tail = element;
-    list->size++;
 }
 
 void removeList(List* list)
 {
     ListElement* current = head(list);
-    while (current != NULL) {
+    while (current != tail(list)) {
         ListElement* temporary = current;
         current = current->next;
         removeListElement(temporary);
     }
+    if (tail(list) != NULL)
+        removeListElement(tail(list));
     free(list);
 }
 
@@ -97,6 +91,8 @@ bool insert(ListElement* value, int position, List* list)
             list->tail = value;
         list->head = value;
         list->size++;
+        if (list->isCyclical)
+            tail(list)->next = head(list);
         return true;
     }
 
@@ -113,12 +109,14 @@ int locate(ListElement* value, List* list)
 {
     ListElement* current = head(list);
     int position = 0;
-    while (current != NULL) {
+    while (current != tail(list)) {
         if (current == value)
             return position;
         current = current->next;
         ++position;
     }
+    if (tail(list) == value)
+        return position;
     return -1; // there is no element with this value
 }
 
@@ -130,10 +128,12 @@ bool deleteFromList(int position, List* list)
     if (position == 0) {
         ListElement* oldHead = head(list);
         list->head = head(list)->next;
-        if (head(list) == NULL) // if true, list is empty
+        if (head(list) == NULL) // if true, list will be empty
             list->tail = NULL;
         removeListElement(oldHead);
         list->size--;
+        if (list->isCyclical && tail(list) != NULL)
+            tail(list)->next = head(list);
         return true;
     }
 
@@ -144,6 +144,8 @@ bool deleteFromList(int position, List* list)
     removeListElement(previous->next);
     previous->next = next;
     list->size--;
+    if (list->isCyclical)
+        tail(list)->next = head(list);
     return true;
 }
 
@@ -158,4 +160,18 @@ void printListElement(ListElement* element)
 void removeListElement(ListElement* element)
 {
     free(element);
+}
+
+ListElement* getNextElement(ListElement* element)
+{
+    return element->next;
+}
+
+bool makeListCyclical(List* list)
+{
+    if (list->size == 0)
+        return false;
+    list->isCyclical = true;
+    tail(list)->next = head(list);
+    return true;
 }

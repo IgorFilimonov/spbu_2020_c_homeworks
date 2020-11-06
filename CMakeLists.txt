@@ -5,7 +5,10 @@ set(CMAKE_C_STANDARD 11)
 
 set(SOURCE_LIB
         library/commonUtils/numericOperations.c
-        library/commonUtils/arrayOperations.c)
+        library/commonUtils/arrayOperations.c
+)
+
+add_library(complexNumber library/complexNumber.c)
 add_library(library ${SOURCE_LIB})
 add_library(list library/list.c)
 add_library(stack library/stack.c)
@@ -34,6 +37,9 @@ add_executable(task4_1 homework4/task1.c)
 target_link_libraries(task4_1 library)
 target_link_libraries(task4_1 stack)
 add_executable(task4_3 homework4/task3.c)
+
+add_executable(task2_t1 test1/task2.c)
+target_link_libraries(task2_t1 complexNumber)
 
 add_executable(task5_1 homework5/task1.c)
 target_link_libraries(task5_1 bst)

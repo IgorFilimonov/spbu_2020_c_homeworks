@@ -58,7 +58,8 @@ void executeCommand(int typeOfCommand, BinarySearchTree* setOfNumbers)
         printTree(setOfNumbers);
         break;
     default:
-        printf("Invalid command number entered\n");
+        if (typeOfCommand != 0)
+            printf("Invalid command number entered\n");
     }
 }
 

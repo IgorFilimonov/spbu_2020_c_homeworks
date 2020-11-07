@@ -206,7 +206,7 @@ bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, BinarySea
             maximumOfSmallerNodes = maximumOfSmallerNodes->rightChild;
         }
 
-        changeParent(maximumOfSmallerNodesParent, maximumOfSmallerNodes, NULL, tree);
+        changeParent(maximumOfSmallerNodesParent, maximumOfSmallerNodes, maximumOfSmallerNodes->leftChild, tree);
         maximumOfSmallerNodes->leftChild = node->leftChild;
         maximumOfSmallerNodes->rightChild = node->rightChild;
         changeParent(parent, node, maximumOfSmallerNodes, tree);

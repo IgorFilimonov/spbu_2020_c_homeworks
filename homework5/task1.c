@@ -3,15 +3,15 @@
 
 void displayHints()
 {
-    printf("What do you want to do?\n");
-    printf("1. Add value to set\n");
-    printf("2. Remove value\n");
-    printf("3. Check if value belongs to set\n");
-    printf("4. Print the elements of a set in ascending order\n");
-    printf("5. Print the elements of the set in descending order\n");
-    printf("6. Print the elements in a special form\n");
-    printf("0. Shut down\n");
-    printf("To select, enter the command number:\n");
+    printf("What do you want to do?\n"
+           "1. Add value to set\n"
+           "2. Remove value\n"
+           "3. Check if value belongs to set\n"
+           "4. Print the elements of a set in ascending order\n"
+           "5. Print the elements of the set in descending order\n"
+           "6. Print the elements in a special form\n"
+           "0. Shut down\n"
+           "To select, enter the command number:\n");
 }
 
 void executeCommand(int typeOfCommand, BinarySearchTree* setOfNumbers)
@@ -21,7 +21,8 @@ void executeCommand(int typeOfCommand, BinarySearchTree* setOfNumbers)
         printf("Enter value:\n");
         int value = 0;
         scanf("%d", &value);
-        addValue(setOfNumbers, value);
+        if (!addValue(setOfNumbers, value))
+            printf("The value is already in the set\n");
         break;
     }
     case 2: {
@@ -31,7 +32,8 @@ void executeCommand(int typeOfCommand, BinarySearchTree* setOfNumbers)
             printf("Enter value:\n");
             int value = 0;
             scanf("%d", &value);
-            deleteValue(setOfNumbers, value);
+            if (!deleteValue(setOfNumbers, value))
+                printf("There is no such number in the set\n");
         }
         break;
     }

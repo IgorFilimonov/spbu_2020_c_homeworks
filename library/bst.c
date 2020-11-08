@@ -34,27 +34,7 @@ bool isEmpty(BinarySearchTree* tree)
     return tree != NULL && tree->root == NULL;
 }
 
-bool addValueRecursive(TreeNode* node, int value)
-{
-    if (node->value == value)
-        return false;
-
-    if (node->value > value) {
-        if (node->leftChild == NULL) {
-            node->leftChild = createTreeNode(value);
-            return true;
-        }
-        return addValueRecursive(node->leftChild, value);
-    }
-
-    if (node->value < value) {
-        if (node->rightChild == NULL) {
-            node->rightChild = createTreeNode(value);
-            return true;
-        }
-        return addValueRecursive(node->rightChild, value);
-    }
-}
+bool addValueRecursive(TreeNode* node, int value);
 
 bool addValue(BinarySearchTree* tree, int value)
 {
@@ -69,15 +49,29 @@ bool addValue(BinarySearchTree* tree, int value)
     return addValueRecursive(tree->root, value);
 }
 
-void printTreeInAscendingOrderRecursive(TreeNode* node)
+bool addValueRecursive(TreeNode* node, int value)
 {
-    if (node == NULL)
-        return;
+    if (node->value == value)
+        return false;
 
-    printTreeInAscendingOrderRecursive(node->leftChild);
-    printf("%d ", node->value);
-    printTreeInAscendingOrderRecursive(node->rightChild);
+    if (node->value < value) {
+        if (node->rightChild == NULL) {
+            node->rightChild = createTreeNode(value);
+            return true;
+        }
+        return addValueRecursive(node->rightChild, value);
+    }
+
+    if (node->value > value) {
+        if (node->leftChild == NULL) {
+            node->leftChild = createTreeNode(value);
+            return true;
+        }
+        return addValueRecursive(node->leftChild, value);
+    }
 }
+
+void printTreeInAscendingOrderRecursive(TreeNode* node);
 
 void printTreeInAscendingOrder(BinarySearchTree* tree)
 {
@@ -93,15 +87,17 @@ void printTreeInAscendingOrder(BinarySearchTree* tree)
     }
 }
 
-void printTreeInDescendingOrderRecursive(TreeNode* node)
+void printTreeInAscendingOrderRecursive(TreeNode* node)
 {
     if (node == NULL)
         return;
 
-    printTreeInDescendingOrderRecursive(node->rightChild);
+    printTreeInAscendingOrderRecursive(node->leftChild);
     printf("%d ", node->value);
-    printTreeInDescendingOrderRecursive(node->leftChild);
+    printTreeInAscendingOrderRecursive(node->rightChild);
 }
+
+void printTreeInDescendingOrderRecursive(TreeNode* node);
 
 void printTreeInDescendingOrder(BinarySearchTree* tree)
 {
@@ -113,6 +109,32 @@ void printTreeInDescendingOrder(BinarySearchTree* tree)
         printf("The tree is empty\n");
     else {
         printTreeInDescendingOrderRecursive(tree->root);
+        printf("\n");
+    }
+}
+
+void printTreeInDescendingOrderRecursive(TreeNode* node)
+{
+    if (node == NULL)
+        return;
+
+    printTreeInDescendingOrderRecursive(node->rightChild);
+    printf("%d ", node->value);
+    printTreeInDescendingOrderRecursive(node->leftChild);
+}
+
+void printTreeRecursive(TreeNode* node);
+
+void printTree(BinarySearchTree* tree)
+{
+    if (tree == NULL) {
+        printf("It's not a tree\n");
+        return;
+    }
+    if (isEmpty(tree))
+        printf("The tree is empty\n");
+    else {
+        printTreeRecursive(tree->root);
         printf("\n");
     }
 }
@@ -131,18 +153,13 @@ void printTreeRecursive(TreeNode* node)
     printf(")");
 }
 
-void printTree(BinarySearchTree* tree)
+bool isValueInTreeRecursive(TreeNode* node, int value);
+
+bool isValueInTree(BinarySearchTree* tree, int value)
 {
-    if (tree == NULL) {
-        printf("It's not a tree\n");
-        return;
-    }
-    if (isEmpty(tree))
-        printf("The tree is empty\n");
-    else {
-        printTreeRecursive(tree->root);
-        printf("\n");
-    }
+    if (tree == NULL || isEmpty(tree))
+        return false;
+    return isValueInTreeRecursive(tree->root, value);
 }
 
 bool isValueInTreeRecursive(TreeNode* node, int value)
@@ -152,45 +169,34 @@ bool isValueInTreeRecursive(TreeNode* node, int value)
 
     if (node->value == value)
         return true;
-    if (node->value > value)
-        return isValueInTreeRecursive(node->leftChild, value);
     if (node->value < value)
         return isValueInTreeRecursive(node->rightChild, value);
+    if (node->value > value)
+        return isValueInTreeRecursive(node->leftChild, value);
 }
 
-bool isValueInTree(BinarySearchTree* tree, int value)
+bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, BinarySearchTree* tree);
+
+bool deleteValue(BinarySearchTree* tree, int value)
 {
     if (tree == NULL || isEmpty(tree))
         return false;
-    return isValueInTreeRecursive(tree->root, value);
+    return deleteValueRecursive(tree->root, value, NULL, tree);
 }
 
-bool isLeaf(TreeNode* node)
-{
-    return node->leftChild == NULL && node->rightChild == NULL;
-}
+bool isLeaf(TreeNode* node);
 
-void changeParent(TreeNode* parentOfNode, TreeNode* node, TreeNode* newChild, BinarySearchTree* tree)
-{
-    if (parentOfNode == NULL) {
-        tree->root = newChild;
-        return;
-    }
-    if (parentOfNode->leftChild == node)
-        parentOfNode->leftChild = newChild;
-    else
-        parentOfNode->rightChild = newChild;
-}
+void changeParent(TreeNode* parentOfNode, TreeNode* node, TreeNode* newChild, BinarySearchTree* tree);
 
 bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, BinarySearchTree* tree)
 {
     if (node == NULL)
         return false;
 
-    if (node->value > value)
-        return deleteValueRecursive(node->leftChild, value, node, tree);
     if (node->value < value)
         return deleteValueRecursive(node->rightChild, value, node, tree);
+    if (node->value > value)
+        return deleteValueRecursive(node->leftChild, value, node, tree);
 
     if (isLeaf(node))
         changeParent(parent, node, NULL, tree);
@@ -216,11 +222,31 @@ bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, BinarySea
     return true;
 }
 
-bool deleteValue(BinarySearchTree* tree, int value)
+bool isLeaf(TreeNode* node)
 {
-    if (tree == NULL || isEmpty(tree))
-        return false;
-    return deleteValueRecursive(tree->root, value, NULL, tree);
+    return node->leftChild == NULL && node->rightChild == NULL;
+}
+
+void changeParent(TreeNode* parentOfNode, TreeNode* node, TreeNode* newChild, BinarySearchTree* tree)
+{
+    if (parentOfNode == NULL) {
+        tree->root = newChild;
+        return;
+    }
+    if (parentOfNode->leftChild == node)
+        parentOfNode->leftChild = newChild;
+    else
+        parentOfNode->rightChild = newChild;
+}
+
+void destroyTreeRecursive(TreeNode* node);
+
+void destroyTree(BinarySearchTree* tree)
+{
+    if (tree != NULL) {
+        destroyTreeRecursive(tree->root);
+        free(tree);
+    }
 }
 
 void destroyTreeRecursive(TreeNode* node)
@@ -231,12 +257,4 @@ void destroyTreeRecursive(TreeNode* node)
     destroyTreeRecursive(node->leftChild);
     destroyTreeRecursive(node->rightChild);
     free(node);
-}
-
-void destroyTree(BinarySearchTree* tree)
-{
-    if (tree != NULL) {
-        destroyTreeRecursive(tree->root);
-        free(tree);
-    }
 }

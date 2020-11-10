@@ -40,3 +40,5 @@ add_executable(task4_3 homework4/task3.c)
 
 add_executable(task2_t1 test1/task2.c)
 target_link_libraries(task2_t1 complexNumber)
+
+add_executable(task1_t2 test2/task1.c)

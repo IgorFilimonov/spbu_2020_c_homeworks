@@ -10,7 +10,8 @@ typedef struct HashElement {
     int attemptsToPush;
 } HashElement;
 
-enum CellType { empty,used };
+enum CellType { empty,
+    used };
 
 struct HashTable {
     HashElement** hashTable;
@@ -170,10 +171,10 @@ void printTheMostCommonElements(HashTable* table)
     for (int i = 1; i <= 10 && i <= table->elementCount; ++i) {
         int hashOfMostCommon = -1;
         for (int j = 0; j < table->bucketCount; ++j) {
-            if (table->types[j] == used
-            && isElementSelected[j] == false
-            && (hashOfMostCommon == -1 || table->hashTable[j]->amount > table->hashTable[hashOfMostCommon]->amount))
-                hashOfMostCommon = j;
+            if (table->types[j] == used && isElementSelected[j] == false) {
+                if (hashOfMostCommon == -1 || table->hashTable[j]->amount > table->hashTable[hashOfMostCommon]->amount)
+                    hashOfMostCommon = j;
+            }
         }
         isElementSelected[hashOfMostCommon] = true;
         printf("%d. %s\n", i, table->hashTable[hashOfMostCommon]->key);

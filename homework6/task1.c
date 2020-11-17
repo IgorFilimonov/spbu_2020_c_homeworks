@@ -10,7 +10,7 @@ char* readNextWord(FILE* inputText, bool* isEndOfFileReached)
     char* word = (char*)calloc(maxSize, sizeof(char));
     int realSize = 0;
     *isEndOfFileReached = false;
-    for (; !*isEndOfFileReached; ++realSize) {
+    while (!*isEndOfFileReached) {
         if (realSize == maxSize) {
             maxSize *= 2;
             word = (char*)realloc(word, maxSize);
@@ -23,6 +23,7 @@ char* readNextWord(FILE* inputText, bool* isEndOfFileReached)
             break;
         }
         word[realSize] = tolower(currentChar);
+        ++realSize;
     }
 
     if (realSize == maxSize)

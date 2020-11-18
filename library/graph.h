@@ -23,6 +23,4 @@ void destroyEdge(Edge* edge);
 
 void destroyGraph(Graph* graph);
 
-void printEdge(Edge* edge);
-
 #endif //SPBU_2020_C_HOMEWORKS_GRAPH_H

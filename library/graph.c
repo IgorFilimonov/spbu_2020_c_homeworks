@@ -1,7 +1,6 @@
 #include "graph.h"
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 struct Edge {
     int start;
@@ -114,9 +113,4 @@ void destroyGraph(Graph* graph)
     for (int i = 0; i < graph->countVertex; ++i)
         free(graph->matrix[i]);
     free(graph);
-}
-
-void printEdge(Edge* edge)
-{
-    printf("%d %d %d\n", edge->start, edge->end, edge->weight);
 }

@@ -3,26 +3,25 @@
 #include <stdlib.h>
 #include <string.h>
 
-void readInputData(FILE* inputFile, int* countCities, int* countRoads, Edge** roads, int* countStates, int** citiesOfStates)
+void readInputData(FILE* inputFile, int* countCities, int* countRoads, Edge*** roads, int* countStates, int*** citiesOfStates)
 {
     fscanf(inputFile, "%d%d", countCities, countRoads);
-    roads = (Edge**)malloc(*countRoads * sizeof(Edge*));
+    *roads = (Edge**)malloc(*countRoads * sizeof(Edge*));
     for (int i = 0; i < *countRoads; ++i) {
         int firstCity = 0, secondCity = 0, length = 0;
         fscanf(inputFile, "%d%d%d", &firstCity, &secondCity, &length);
-        roads[i] = createEdge(firstCity - 1, secondCity - 1, length, false);
-        printEdge(roads[i]);
+        (*roads)[i] = createEdge(firstCity - 1, secondCity - 1, length, false);
     }
 
     fscanf(inputFile, "%d", countStates);
-    citiesOfStates = (int**)malloc(*countStates * sizeof(int*));
+    *citiesOfStates = (int**)malloc(*countStates * sizeof(int*));
     for (int i = 0; i < *countStates; ++i) {
-        citiesOfStates[i] = (int*)malloc(*countCities * sizeof(int));
-        memset(citiesOfStates[i], -1, *countCities * sizeof(int));
+        (*citiesOfStates)[i] = (int*)malloc(*countCities * sizeof(int));
+        memset((*citiesOfStates)[i], -1, *countCities * sizeof(int));
 
         int capital = 0;
         fscanf(inputFile, "%d", &capital);
-        citiesOfStates[i][0] = capital - 1;
+        (*citiesOfStates)[i][0] = capital - 1;
     }
 }
 
@@ -57,7 +56,7 @@ bool addNearbyCities(int countStates, int** citiesOfStates, int sizeOfTheLargest
 void printListsOfCities(int countStates, int** citiesOfStates, int countCities)
 {
     for (int i = 0; i < countStates; ++i) {
-        printf("%d: %d", i + 1, citiesOfStates[i][0] + 1);
+        printf("State number %d includes cities: %d", i + 1, citiesOfStates[i][0] + 1);
         for (int j = 1; j < countCities && citiesOfStates[i][j] != -1; ++j)
             printf(", %d", citiesOfStates[i][j] + 1);
         printf("\n");
@@ -87,14 +86,15 @@ int main()
     int countCities = 0, countRoads = 0, countStates = 0;
     Edge** roads = NULL;
     int** citiesOfStates = NULL;
-    readInputData(inputFile, &countCities, &countRoads, roads, &countStates, citiesOfStates);
+    readInputData(inputFile, &countCities, &countRoads, &roads, &countStates, &citiesOfStates);
     Graph* graph = createGraph(countRoads, countCities, roads);
-    return 0;
 
-    bool areAllCitiesDistributed = false;
-    int sizeOfTheLargestState = 1;
     bool* isCityVacant = (bool*)malloc(countCities * sizeof(bool));
     memset(isCityVacant, true, countCities * sizeof(bool));
+    for (int i = 0; i < countStates; ++i)
+        isCityVacant[citiesOfStates[i][0]] = false;
+    bool areAllCitiesDistributed = false;
+    int sizeOfTheLargestState = 1;
     while (!areAllCitiesDistributed) {
         if (!addNearbyCities(countStates, citiesOfStates, sizeOfTheLargestState, graph, isCityVacant))
             areAllCitiesDistributed = true;

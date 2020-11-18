@@ -1,0 +1,122 @@
+#include "graph.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+struct Edge {
+    int start;
+    int end;
+    int weight;
+    bool oriented;
+};
+
+struct Graph {
+    int** matrix;
+    int countVertex;
+    int countEdges;
+};
+
+Edge* createEdge(int start, int end, int weight, bool oriented)
+{
+    Edge* newEdge = (Edge*)malloc(sizeof(Edge));
+    newEdge->start = start;
+    newEdge->end = end;
+    newEdge->weight = weight;
+    newEdge->oriented = oriented;
+    return newEdge;
+}
+
+void initializeMatrix(Graph* graph, Edge** edges);
+
+Graph* createGraph(int countEdges, int countVertex, Edge** edges)
+{
+    Graph* newGraph = (Graph*)malloc(sizeof(Graph));
+    newGraph->countVertex = countVertex;
+    newGraph->countEdges = countEdges;
+    initializeMatrix(newGraph, edges);
+    return newGraph;
+}
+
+void initializeMatrix(Graph* graph, Edge** edges)
+{
+    graph->matrix = (int**)malloc(graph->countVertex * sizeof(int*));
+    for (int i = 0; i < graph->countVertex; ++i)
+        graph->matrix[i] = (int*)calloc(graph->countVertex, sizeof(int));
+
+    for (int i = 0; i < graph->countEdges; ++i) {
+        graph->matrix[edges[i]->start][edges[i]->end] = edges[i]->weight;
+        if (!edges[i]->oriented)
+            graph->matrix[edges[i]->end][edges[i]->start] = edges[i]->weight;
+    }
+}
+
+bool depthFirstSearch(Graph* graph, int currentVertex, int* vertexState)
+{
+    vertexState[currentVertex] = 1;
+    for (int i = 0; i < graph->countVertex; i++) {
+        if (graph->matrix[currentVertex][i] != 0) {
+            if(vertexState[i] == 1 || vertexState[i] == 0 && depthFirstSearch(graph, i, vertexState))
+                return true;
+        }
+    }
+
+    vertexState[currentVertex] = 2;
+    return false;
+}
+
+bool isConnected(int firstVertex, int secondVertex, Graph* graph)
+{
+    int* vertexState = (int*)calloc(graph->countVertex, sizeof(int));
+    depthFirstSearch(graph, firstVertex, vertexState);
+    bool isConnected = vertexState[secondVertex] > 0;
+    free(vertexState);
+    return isConnected;
+}
+
+bool isCycled(Graph* graph)
+{
+    int* vertexState = (int*)calloc(graph->countVertex, sizeof(int));
+    bool isCycled = false;
+    for (int i = 0; i < graph->countVertex; ++i) {
+        if (vertexState[i] == 0 && depthFirstSearch(graph, i, vertexState)) {
+            isCycled = true;
+            break;
+        }
+    }
+
+    free(vertexState);
+    return isCycled;
+}
+
+bool findNearestVacantVertex(Graph* graph, int vertex, bool* isVertexVacant, int* nearestVacantVertex, int* distanceToNearestVertex)
+{
+    *nearestVacantVertex = -1;
+    *distanceToNearestVertex = 0;
+    for (int i = 0; i < graph->countVertex; ++i) {
+        if (graph->matrix[vertex][i] != 0 && isVertexVacant[i]) {
+            if (*nearestVacantVertex == -1 || graph->matrix[vertex][i] < *distanceToNearestVertex) {
+                *nearestVacantVertex = i;
+                *distanceToNearestVertex = graph->matrix[vertex][i];
+            }
+        }
+    }
+
+    return *nearestVacantVertex != -1;
+}
+
+void destroyEdge(Edge* edge)
+{
+    free(edge);
+}
+
+void destroyGraph(Graph* graph)
+{
+    for (int i = 0; i < graph->countVertex; ++i)
+        free(graph->matrix[i]);
+    free(graph);
+}
+
+void printEdge(Edge* edge)
+{
+    printf("%d %d %d\n", edge->start, edge->end, edge->weight);
+}

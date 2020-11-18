@@ -12,7 +12,7 @@ add_library(complexNumber library/complexNumber.c)
 add_library(library ${SOURCE_LIB})
 add_library(list library/list.c)
 add_library(stack library/stack.c)
-
+add_library(graph library/graph.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)
@@ -40,3 +40,6 @@ add_executable(task4_3 homework4/task3.c)
 
 add_executable(task2_t1 test1/task2.c)
 target_link_libraries(task2_t1 complexNumber)
+
+add_executable(task7_2 homework7/task2.c)
+target_link_libraries(task7_2 graph)

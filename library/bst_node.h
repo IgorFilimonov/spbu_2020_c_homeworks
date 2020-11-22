@@ -1,5 +1,5 @@
-#ifndef IDIOT_BST_NODE_H
-#define IDIOT_BST_NODE_H
+#ifndef SPBU_2020_C_HOMEWORKS_BST_NODE_H
+#define SPBU_2020_C_HOMEWORKS_BST_NODE_H
 
 #include <stdbool.h>
 
@@ -26,4 +26,4 @@ bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, TreeNode*
 
 void destroyTreeRecursive(TreeNode* node);
 
-#endif //IDIOT_BST_NODE_H
+#endif //SPBU_2020_C_HOMEWORKS_BST_NODE_H

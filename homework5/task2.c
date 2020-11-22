@@ -1,4 +1,4 @@
-#include "../library/bst.h"
+#include "../library/avl.h"
 #include <stdio.h>
 
 void displayHints()
@@ -14,7 +14,7 @@ void displayHints()
            "To select, enter the command number:\n");
 }
 
-void executeCommand(int typeOfCommand, BinarySearchTree* setOfNumbers)
+void executeCommand(int typeOfCommand, AVLTree* setOfNumbers)
 {
     switch (typeOfCommand) {
     case 1: {
@@ -67,7 +67,7 @@ void executeCommand(int typeOfCommand, BinarySearchTree* setOfNumbers)
 
 int main()
 {
-    BinarySearchTree* setOfNumbers = createTree();
+    AVLTree* setOfNumbers = createTree();
     int typeOfCommand = -1;
     while (typeOfCommand != 0) {
         displayHints();

@@ -1,5 +1,5 @@
-#ifndef SPBU_2020_C_HOMEWORKS_BST_H
-#define SPBU_2020_C_HOMEWORKS_BST_H
+#ifndef IDIOT_AVL_H
+#define IDIOT_AVL_H
 
 #include <stdbool.h>
 
@@ -23,4 +23,4 @@ bool deleteValue(AVLTree* tree, int value);
 
 void destroyTree(AVLTree* tree);
 
-#endif //SPBU_2020_C_HOMEWORKS_BST_H
+#endif //IDIOT_AVL_H

@@ -1,15 +1,9 @@
 #include "avl.h"
+#include "bst_node.h"
 #include "../library/commonUtils/numericOperations.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct TreeNode {
-    int value;
-    int height;
-    struct TreeNode* leftChild;
-    struct TreeNode* rightChild;
-} TreeNode;
 
 struct AVLTree {
     TreeNode* root;
@@ -20,16 +14,6 @@ AVLTree* createTree()
     AVLTree* newTree = (AVLTree*)malloc(sizeof(AVLTree));
     newTree->root = NULL;
     return newTree;
-}
-
-TreeNode* createTreeNode(int value)
-{
-    TreeNode* newNode = (TreeNode*)malloc(sizeof(TreeNode));
-    newNode->value = value;
-    newNode->height = 1;
-    newNode->leftChild = NULL;
-    newNode->rightChild = NULL;
-    return newNode;
 }
 
 int getHeight(TreeNode* node)
@@ -100,7 +84,25 @@ bool isEmpty(AVLTree* tree)
     return tree != NULL && tree->root == NULL;
 }
 
-bool addValueRecursive(TreeNode* node, int value);
+void findNodeAndBalance(TreeNode* node, int desiredValue)
+{
+    if (node->value == desiredValue) {
+        node->rightChild = balance(node->rightChild);
+        node->leftChild = balance(node->leftChild);
+    }
+
+    if (node->value < desiredValue) {
+        findNodeAndBalance(node->rightChild, desiredValue);
+        node->rightChild = balance(node->rightChild);
+    }
+
+    if (node->value > desiredValue) {
+        findNodeAndBalance(node->leftChild, desiredValue);
+        node->leftChild = balance(node->leftChild);
+    }
+
+    updateHeight(node);
+}
 
 bool addValue(AVLTree* tree, int value)
 {
@@ -112,46 +114,13 @@ bool addValue(AVLTree* tree, int value)
         return true;
     }
 
-    bool isAddingValueSuccessful = addValueRecursive(tree->root, value);
-    if (isAddingValueSuccessful)
+    if (addValueRecursive(tree->root, value)) {
+        findNodeAndBalance(tree->root, value);
         tree->root = balance(tree->root);
-    return isAddingValueSuccessful;
-}
-
-bool addValueRecursive(TreeNode* node, int value)
-{
-    if (node->value == value)
+        return true;
+    } else
         return false;
-
-    bool isAddingValueSuccessful = false;
-
-    if (node->value < value) {
-        if (node->rightChild == NULL) {
-            node->rightChild = createTreeNode(value);
-            isAddingValueSuccessful = true;
-        } else {
-            isAddingValueSuccessful = addValueRecursive(node->rightChild, value);
-            if (isAddingValueSuccessful)
-                node->rightChild = balance(node->rightChild);
-        }
-    }
-    if (node->value > value) {
-        if (node->leftChild == NULL) {
-            node->leftChild = createTreeNode(value);
-            isAddingValueSuccessful = true;
-        } else {
-            isAddingValueSuccessful = addValueRecursive(node->leftChild, value);
-            if (isAddingValueSuccessful)
-                node->leftChild = balance(node->leftChild);
-        }
-    }
-
-    if (isAddingValueSuccessful)
-        updateHeight(node);
-    return isAddingValueSuccessful;
 }
-
-void printTreeInAscendingOrderRecursive(TreeNode* node);
 
 void printTreeInAscendingOrder(AVLTree* tree)
 {
@@ -167,18 +136,6 @@ void printTreeInAscendingOrder(AVLTree* tree)
     }
 }
 
-void printTreeInAscendingOrderRecursive(TreeNode* node)
-{
-    if (node == NULL)
-        return;
-
-    printTreeInAscendingOrderRecursive(node->leftChild);
-    printf("%d ", node->value);
-    printTreeInAscendingOrderRecursive(node->rightChild);
-}
-
-void printTreeInDescendingOrderRecursive(TreeNode* node);
-
 void printTreeInDescendingOrder(AVLTree* tree)
 {
     if (tree == NULL) {
@@ -192,18 +149,6 @@ void printTreeInDescendingOrder(AVLTree* tree)
         printf("\n");
     }
 }
-
-void printTreeInDescendingOrderRecursive(TreeNode* node)
-{
-    if (node == NULL)
-        return;
-
-    printTreeInDescendingOrderRecursive(node->rightChild);
-    printf("%d ", node->value);
-    printTreeInDescendingOrderRecursive(node->leftChild);
-}
-
-void printTreeRecursive(TreeNode* node);
 
 void printTree(AVLTree* tree)
 {
@@ -219,22 +164,6 @@ void printTree(AVLTree* tree)
     }
 }
 
-void printTreeRecursive(TreeNode* node)
-{
-    if (node == NULL) {
-        printf("null");
-        return;
-    }
-
-    printf("(%d ", node->value);
-    printTreeRecursive(node->leftChild);
-    printf(" ");
-    printTreeRecursive(node->rightChild);
-    printf(")");
-}
-
-bool isValueInTreeRecursive(TreeNode* node, int value);
-
 bool isValueInTree(AVLTree* tree, int value)
 {
     if (tree == NULL || isEmpty(tree))
@@ -242,110 +171,24 @@ bool isValueInTree(AVLTree* tree, int value)
     return isValueInTreeRecursive(tree->root, value);
 }
 
-bool isValueInTreeRecursive(TreeNode* node, int value)
-{
-    if (node == NULL)
-        return false;
-
-    if (node->value == value)
-        return true;
-    if (node->value < value)
-        return isValueInTreeRecursive(node->rightChild, value);
-    if (node->value > value)
-        return isValueInTreeRecursive(node->leftChild, value);
-}
-
-bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, AVLTree* tree);
-
 bool deleteValue(AVLTree* tree, int value)
 {
     if (tree == NULL || isEmpty(tree))
         return false;
-    bool isDeletionValueSuccessful = deleteValueRecursive(tree->root, value, NULL, tree);
-    if (isDeletionValueSuccessful)
+
+    TreeNode* newRoot = NULL;
+    TreeNode* nodeForBalancing = NULL;
+    bool isNeedToDeleteRoot = tree->root->value == value;
+    if (deleteValueRecursive(tree->root, value, NULL, &newRoot, &nodeForBalancing)) {
+        if (isNeedToDeleteRoot)
+            tree->root = newRoot;
+        if (nodeForBalancing != NULL)
+            findNodeAndBalance(tree->root, nodeForBalancing->value);
         tree->root = balance(tree->root);
-    return isDeletionValueSuccessful;
-}
-
-bool isLeaf(TreeNode* node);
-
-void changeParent(TreeNode* parentOfNode, TreeNode* node, TreeNode* newChild, AVLTree* tree);
-
-TreeNode* cutMaximumOfSmallerNodes(TreeNode* node, TreeNode* parent, AVLTree* tree);
-
-bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, AVLTree* tree)
-{
-    if (node == NULL)
-        return false;
-
-    if (node->value == value) {
-        if (isLeaf(node))
-            changeParent(parent, node, NULL, tree);
-        else if (node->leftChild == NULL)
-            changeParent(parent, node, node->rightChild, tree);
-        else if (node->rightChild == NULL)
-            changeParent(parent, node, node->leftChild, tree);
-        else {
-            TreeNode* maximumOfSmallerNodes = cutMaximumOfSmallerNodes(node->leftChild, node, tree);
-            maximumOfSmallerNodes->leftChild = node->leftChild;
-            maximumOfSmallerNodes->rightChild = node->rightChild;
-            updateHeight(maximumOfSmallerNodes);
-            changeParent(parent, node, maximumOfSmallerNodes, tree);
-        }
-
-        free(node);
         return true;
     }
-
-    bool isValueDeletionSuccessful = false;
-
-    if (node->value < value) {
-        isValueDeletionSuccessful = deleteValueRecursive(node->rightChild, value, node, tree);
-        if (isValueDeletionSuccessful)
-            node->rightChild = balance(node->rightChild);
-    }
-    if (node->value > value) {
-        isValueDeletionSuccessful = deleteValueRecursive(node->leftChild, value, node, tree);
-        if (isValueDeletionSuccessful)
-            node->leftChild = balance(node->leftChild);
-    }
-
-    if (isValueDeletionSuccessful)
-        updateHeight(node);
-    return isValueDeletionSuccessful;
+    return false;
 }
-
-bool isLeaf(TreeNode* node)
-{
-    return node->leftChild == NULL && node->rightChild == NULL;
-}
-
-void changeParent(TreeNode* parentOfNode, TreeNode* node, TreeNode* newChild, AVLTree* tree)
-{
-    if (parentOfNode == NULL) {
-        tree->root = newChild;
-        return;
-    }
-    if (parentOfNode->leftChild == node)
-        parentOfNode->leftChild = newChild;
-    else
-        parentOfNode->rightChild = newChild;
-}
-
-TreeNode* cutMaximumOfSmallerNodes(TreeNode* node, TreeNode* parent, AVLTree* tree)
-{
-    if (node->rightChild == NULL) {
-        changeParent(parent, node, node->leftChild, tree);
-        return node;
-    }
-
-    TreeNode* maximumOfSmallerNodes = cutMaximumOfSmallerNodes(node->rightChild, node, tree);
-    node->rightChild = balance(node->rightChild);
-    updateHeight(node);
-    return maximumOfSmallerNodes;
-}
-
-void destroyTreeRecursive(TreeNode* node);
 
 void destroyTree(AVLTree* tree)
 {
@@ -353,14 +196,4 @@ void destroyTree(AVLTree* tree)
         destroyTreeRecursive(tree->root);
         free(tree);
     }
-}
-
-void destroyTreeRecursive(TreeNode* node)
-{
-    if (node == NULL)
-        return;
-
-    destroyTreeRecursive(node->leftChild);
-    destroyTreeRecursive(node->rightChild);
-    free(node);
 }

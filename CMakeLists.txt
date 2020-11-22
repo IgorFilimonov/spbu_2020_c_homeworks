@@ -12,7 +12,7 @@ add_library(complexNumber library/complexNumber.c)
 add_library(library ${SOURCE_LIB})
 add_library(list library/list.c)
 add_library(stack library/stack.c)
-add_library(avl library/avl.c)
+add_library(avl library/bst_node.c library/avl.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)

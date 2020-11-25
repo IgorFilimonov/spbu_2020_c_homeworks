@@ -42,4 +42,4 @@ add_executable(task2_t1 test1/task2.c)
 target_link_libraries(task2_t1 complexNumber)
 
 add_executable(task6_1 homework6/task1.c)
-target_link_libraries(task6_1 hashtable)
+target_link_libraries(task6_1 hashtable library)

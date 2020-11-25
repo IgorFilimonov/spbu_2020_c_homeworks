@@ -1,5 +1,5 @@
+#include "commonUtils/numericOperations.h"
 #include "hashtable.h"
-#include "../library/commonUtils/numericOperations.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,8 +70,10 @@ void destroyHashElement(HashElement* element)
 
 void destroyHashTable(HashTable* table)
 {
-    for (int i = 0; i < table->bucketCount; ++i)
-        destroyHashElement(table->hashTable[i]);
+    for (int i = 0; i < table->bucketCount; ++i) {
+        if (table->types[i] == used)
+            destroyHashElement(table->hashTable[i]);
+    }
     free(table->hashTable);
     free(table->types);
     free(table);
@@ -106,6 +108,7 @@ void pushElement(HashTable* table, HashElement* element)
     int positionToPush = findPositionToPush(table, element);
     if (table->types[positionToPush] == used) {
         table->hashTable[positionToPush]->amount += element->amount;
+        destroyHashElement(element);
     } else {
         table->hashTable[positionToPush] = element;
         table->types[positionToPush] = used;
@@ -157,6 +160,32 @@ void expandHashTable(HashTable* table)
 void pushByKey(HashTable* table, char* key)
 {
     pushElement(table, createHashElement(key));
+}
+
+bool deleteElement(HashTable* table, char* key)
+{
+    int hash = getHash(key, table->polynomFactor, table->bucketCount);
+    int currentIndex = hash;
+    for (int i = 0; i < table->bucketCount; ++i) {
+        if (table->types[currentIndex] == empty)
+            return false;
+        else {
+            if (table->types[currentIndex] == used) {
+                if (strcmp(table->hashTable[currentIndex]->key, key) == 0) {
+                    --table->hashTable[currentIndex]->amount;
+                    if (table->hashTable[currentIndex]->amount == 0) {
+                        table->types[currentIndex] = deleted;
+                        destroyHashElement(table->hashTable[currentIndex]);
+                        --table->elementCount;
+                    }
+                    return true;
+                }
+            }
+            currentIndex = getNewIndex(hash, i, table->bucketCount);
+        }
+    }
+
+    return false;
 }
 
 int getTotalNumberOfAttempts(HashTable* table);

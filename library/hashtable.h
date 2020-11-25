@@ -13,7 +13,7 @@ void destroyHashTable(HashTable* table);
 
 void pushByKey(HashTable* table, char* key);
 
-
+bool deleteElement(HashTable* table, char* key);
 
 void printHashTableStats(HashTable* table);
 

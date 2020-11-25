@@ -17,7 +17,7 @@ bool isConnected(int firstVertex, int secondVertex, Graph* graph);
 
 bool isCycled(Graph* graph);
 
-bool findNearestVacantVertex(Graph* graph, int vertex, bool* isVertexVacant, int* nearestVacantVertex, int* distanceToNearestVertex);
+int findNearestVacantVertex(int vertex, Graph* graph, bool* isVertexVacant, int* distanceToNearestVertex);
 
 void destroyEdge(Edge* edge);
 

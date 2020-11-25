@@ -175,3 +175,13 @@ bool makeListCyclical(List* list)
     tail(list)->next = head(list);
     return true;
 }
+
+int getValue(ListElement* element)
+{
+    return element->value;
+}
+
+int getSize(List* list)
+{
+    return list->size;
+}

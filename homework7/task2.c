@@ -1,50 +1,61 @@
 #include "../library/graph.h"
+#include "../library/list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-void readInputData(FILE* inputFile, int* countCities, int* countRoads, Edge*** roads, int* countStates, int*** citiesOfStates)
+Graph* readGraph(FILE* inputFile, int countCities, int countRoads)
 {
-    fscanf(inputFile, "%d%d", countCities, countRoads);
-    *roads = (Edge**)malloc(*countRoads * sizeof(Edge*));
-    for (int i = 0; i < *countRoads; ++i) {
+    Edge** roads = (Edge**)malloc(countRoads * sizeof(Edge*));
+    for (int i = 0; i < countRoads; ++i) {
         int firstCity = 0, secondCity = 0, length = 0;
         fscanf(inputFile, "%d%d%d", &firstCity, &secondCity, &length);
-        (*roads)[i] = createEdge(firstCity - 1, secondCity - 1, length, false);
+        roads[i] = createEdge(firstCity - 1, secondCity - 1, length, false);
     }
 
-    fscanf(inputFile, "%d", countStates);
-    *citiesOfStates = (int**)malloc(*countStates * sizeof(int*));
-    for (int i = 0; i < *countStates; ++i) {
-        (*citiesOfStates)[i] = (int*)malloc(*countCities * sizeof(int));
-        memset((*citiesOfStates)[i], -1, *countCities * sizeof(int));
-
-        int capital = 0;
-        fscanf(inputFile, "%d", &capital);
-        (*citiesOfStates)[i][0] = capital - 1;
-    }
+    Graph* graph = createGraph(countRoads, countCities, roads);
+    for (int i = 0; i < countRoads; ++i)
+        destroyEdge(roads[i]);
+    free(roads);
+    return graph;
 }
 
-bool addNearbyCities(int countStates, int** citiesOfStates, int sizeOfTheLargestState, Graph* graph, bool* isCityVacant)
+List** readCapitals(FILE* inputFile, int countStates)
+{
+    List** citiesOfStates = (List**)malloc(countStates * sizeof(List*));
+    for (int i = 0; i < countStates; ++i) {
+        citiesOfStates[i] = createList();
+        int capital = 0;
+        fscanf(inputFile, "%d", &capital);
+        insert(createListElement(capital - 1), 0, citiesOfStates[i]);
+    }
+
+    return citiesOfStates;
+}
+
+bool addNearbyCities(List** citiesOfStates, Graph* graph, int countStates, int sizeOfTheLargestState, bool* isCityVacant)
 {
     bool isAnyCityAdded = false;
     for (int i = 0; i < countStates; ++i) {
-        if (citiesOfStates[i][sizeOfTheLargestState - 1] == -1) // if true, it wasn't possible to increase the state last time
+        if (getSize(citiesOfStates[i]) != sizeOfTheLargestState) // if true, it wasn't possible to increase the state last time
             continue;
 
         int nearestVacantCity = -1, distanceToNearestCity = 0;
+        ListElement* currentCity = head(citiesOfStates[i]);
         for (int j = 0; j < sizeOfTheLargestState; ++j) {
-            int possibleNearestVacantCity = -1, possibleDistanceToNearestCity = 0;
-            if (findNearestVacantVertex(graph, citiesOfStates[i][j], isCityVacant, &possibleNearestVacantCity, &possibleDistanceToNearestCity)) {
+            int possibleDistanceToNearestCity = 0;
+            int possibleNearestVacantCity = findNearestVacantVertex(getValue(currentCity), graph, isCityVacant, &possibleDistanceToNearestCity);
+            if (possibleNearestVacantCity != -1) {
                 if (nearestVacantCity == -1 || possibleDistanceToNearestCity < distanceToNearestCity) {
                     nearestVacantCity = possibleNearestVacantCity;
                     distanceToNearestCity = possibleDistanceToNearestCity;
                 }
             }
+            currentCity = getNextElement(currentCity);
         }
 
         if (nearestVacantCity != -1) {
-            citiesOfStates[i][sizeOfTheLargestState] = nearestVacantCity;
+            insert(createListElement(nearestVacantCity), sizeOfTheLargestState, citiesOfStates[i]);
             isCityVacant[nearestVacantCity] = false;
             isAnyCityAdded = true;
         }
@@ -53,26 +64,17 @@ bool addNearbyCities(int countStates, int** citiesOfStates, int sizeOfTheLargest
     return isAnyCityAdded;
 }
 
-void printListsOfCities(int countStates, int** citiesOfStates, int countCities)
+void printListsOfCities(List** citiesOfStates, int countStates)
 {
     for (int i = 0; i < countStates; ++i) {
-        printf("State number %d includes cities: %d", i + 1, citiesOfStates[i][0] + 1);
-        for (int j = 1; j < countCities && citiesOfStates[i][j] != -1; ++j)
-            printf(", %d", citiesOfStates[i][j] + 1);
+        ListElement* currentCity = head(citiesOfStates[i]);
+        printf("State number %d includes cities: %d", i + 1, getValue(currentCity) + 1);
+        for (int j = 1; j < getSize(citiesOfStates[i]); ++j) {
+            currentCity = getNextElement(currentCity);
+            printf(", %d", getValue(currentCity) + 1);
+        }
         printf("\n");
     }
-}
-
-void clearMemory(int countRoads, Edge** roads, int countStates, int** citiesOfStates, Graph* graph, bool* isCityVacant)
-{
-    for (int i = 0; i < countRoads; ++i)
-        destroyEdge(roads[i]);
-    free(roads);
-    for (int i = 0; i < countStates; ++i)
-        free(citiesOfStates[i]);
-    free(citiesOfStates);
-    destroyGraph(graph);
-    free(isCityVacant);
 }
 
 int main()
@@ -83,31 +85,29 @@ int main()
         return 0;
     }
 
-    int countCities = 0, countRoads = 0, countStates = 0;
-    Edge** roads = NULL;
-    int** citiesOfStates = NULL;
-    readInputData(inputFile, &countCities, &countRoads, &roads, &countStates, &citiesOfStates);
-    Graph* graph = createGraph(countRoads, countCities, roads);
+    int countCities = 0, countRoads = 0;
+    fscanf(inputFile, "%d%d", &countCities, &countRoads);
+    Graph* graph = readGraph(inputFile, countCities, countRoads);
+    int countStates = 0;
+    fscanf(inputFile, "%d", &countStates);
+    List** citiesOfStates = readCapitals(inputFile, countStates);
+    fclose(inputFile);
 
     bool* isCityVacant = (bool*)malloc(countCities * sizeof(bool));
     memset(isCityVacant, true, countCities * sizeof(bool));
     for (int i = 0; i < countStates; ++i)
-        isCityVacant[citiesOfStates[i][0]] = false;
-    bool areAllCitiesDistributed = false;
-    int sizeOfTheLargestState = 1;
-    while (!areAllCitiesDistributed) {
-        if (!addNearbyCities(countStates, citiesOfStates, sizeOfTheLargestState, graph, isCityVacant))
-            areAllCitiesDistributed = true;
-        else {
-            ++sizeOfTheLargestState;
-            if (sizeOfTheLargestState == countCities)
-                areAllCitiesDistributed = true;
-        }
+        isCityVacant[getValue(head(citiesOfStates[i]))] = false;
+    for (int sizeOfTheLargestState = 1; sizeOfTheLargestState <= countCities; ++sizeOfTheLargestState) {
+        if (!addNearbyCities(citiesOfStates, graph, countStates, sizeOfTheLargestState, isCityVacant))
+            break;
     }
+    free(isCityVacant);
 
-    printListsOfCities(countStates, citiesOfStates, countCities);
+    printListsOfCities(citiesOfStates, countStates);
 
-    clearMemory(countRoads, roads, countStates, citiesOfStates, graph, isCityVacant);
-    fclose(inputFile);
+    destroyGraph(graph);
+    for (int i = 0; i < countStates; ++i)
+        removeList(citiesOfStates[i]);
+    free(citiesOfStates);
     return 0;
 }

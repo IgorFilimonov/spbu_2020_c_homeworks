@@ -2,28 +2,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void readInputData(FILE* inputFile, int* countStudents, Edge*** dishonestStudents, int* countDishonestStudents)
+Graph* readGraph(FILE* inputFile, int countStudents)
 {
-    fscanf(inputFile, "%d", countStudents);
-    *dishonestStudents = (Edge**)calloc(*countStudents - 3, sizeof(Edge*));
-    *countDishonestStudents = 0;
-    for (int i = 0; i < *countStudents - 3; ++i) {
+    Edge** dishonestStudents = (Edge**)calloc(countStudents - 3, sizeof(Edge*));
+    int countDishonestStudents = 0;
+    for (int i = 0; i < countStudents - 3; ++i) {
         int firstStudent = 0, secondStudent = 0;
         fscanf(inputFile, "%d%d", &firstStudent, &secondStudent);
         if (secondStudent != -1) {
-            (*dishonestStudents)[*countDishonestStudents] = createEdge(firstStudent - 1, secondStudent - 1, 1, false);
-            ++(*countDishonestStudents);
+            dishonestStudents[countDishonestStudents] = createEdge(firstStudent - 1, secondStudent - 1, 1, false);
+            ++countDishonestStudents;
         }
     }
-}
 
-void clearMemory(int countDishonestStudents, Edge** dishonestStudents, Graph* graph, int* numbersOfStolenWorks)
-{
+    Graph* graph = createGraph(countDishonestStudents, countStudents, dishonestStudents);
     for (int i = 0; i < countDishonestStudents; ++i)
         destroyEdge(dishonestStudents[i]);
     free(dishonestStudents);
-    destroyGraph(graph);
-    free(numbersOfStolenWorks);
+    return graph;
 }
 
 int main()
@@ -34,10 +30,10 @@ int main()
         return 0;
     }
 
-    int countStudents = 0, countDishonestStudents = 0;
-    Edge** dishonestStudents = NULL;
-    readInputData(inputFile, &countStudents, &dishonestStudents, &countDishonestStudents);
-    Graph* graph = createGraph(countDishonestStudents, countStudents, dishonestStudents);
+    int countStudents = 0;
+    fscanf(inputFile, "%d", &countStudents);
+    Graph* graph = readGraph(inputFile, countStudents);
+    fclose(inputFile);
 
     int* numbersOfStolenWorks = findComponents(graph);
     printf("Here are the student numbers and whose work they passed:\n");
@@ -48,7 +44,7 @@ int main()
             printf("%d: %d\n", i + 1, numbersOfStolenWorks[i] + 1);
     }
 
-    clearMemory(countDishonestStudents, dishonestStudents, graph, numbersOfStolenWorks);
-    fclose(inputFile);
+    destroyGraph(graph);
+    free(numbersOfStolenWorks);
     return 0;
 }

@@ -14,6 +14,7 @@ add_library(list library/list.c)
 add_library(stack library/stack.c)
 add_library(avl library/bst_node.c library/avl.c)
 add_library(graph library/graph.c)
+add_library(hashtable library/hashtable.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)
@@ -46,6 +47,9 @@ add_executable(task5_2 homework5/task2.c)
 target_link_libraries(task5_2 avl library)
 
 add_executable(task1_t2 test2/task1.c)
+
+add_executable(task6_1 homework6/task1.c)
+target_link_libraries(task6_1 hashtable library)
 
 add_executable(task7_1 homework7/task1.c)
 target_link_libraries(task7_1 graph)

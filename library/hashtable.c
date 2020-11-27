@@ -23,6 +23,8 @@ struct HashTable {
     int bucketCount;
     int elementCount;
     int polynomFactor;
+    int (*getHash)(char*, int, int);
+    int (*getNewIndex)(int, int, int);
 };
 
 HashElement* createHashElement(char* key)
@@ -37,16 +39,16 @@ HashElement* createHashElement(char* key)
     return newElement;
 }
 
-void initializeHashTable(HashTable* table, int size, int polynomFactor);
+void initializeHashTable(HashTable* table, int size, int polynomFactor, int (*getHash)(char*, int, int), int (*getNewIndex)(int, int, int));
 
-HashTable* createHashTableWithSize(int size, int polynomFactor)
+HashTable* createHashTableWithSize(int size, int polynomFactor, int (*getHash)(char*, int, int), int (*getNewIndex)(int, int, int))
 {
     HashTable* newTable = (HashTable*)malloc(sizeof(HashTable));
-    initializeHashTable(newTable, size, polynomFactor);
+    initializeHashTable(newTable, size, polynomFactor, getHash, getNewIndex);
     return newTable;
 }
 
-void initializeHashTable(HashTable* table, int size, int polynomFactor)
+void initializeHashTable(HashTable* table, int size, int polynomFactor, int (*getHash)(char*, int, int), int (*getNewIndex)(int, int, int))
 {
     table->hashTable = (HashElement**)malloc(sizeof(HashElement*) * size);
     memset(table->hashTable, 0, size * sizeof(HashElement*));
@@ -55,11 +57,13 @@ void initializeHashTable(HashTable* table, int size, int polynomFactor)
     table->bucketCount = size;
     table->elementCount = 0;
     table->polynomFactor = polynomFactor;
+    table->getHash = getHash;
+    table->getNewIndex = getNewIndex;
 }
 
-HashTable* createHashTable(int polynomFactor)
+HashTable* createHashTable(int polynomFactor, int (*getHash)(char*, int, int), int (*getNewIndex)(int, int, int))
 {
-    return createHashTableWithSize(1, polynomFactor);
+    return createHashTableWithSize(1, polynomFactor, getHash, getNewIndex);
 }
 
 void destroyHashElement(HashElement* element)
@@ -79,24 +83,11 @@ void destroyHashTable(HashTable* table)
     free(table);
 }
 
-int getHash(char* key, int polynomFactor, int module)
-{
-    int currentHash = 0;
-    for (int i = 0; i < strlen(key); ++i)
-        currentHash = ((currentHash * polynomFactor) + (key[i] - 'a')) % module;
-    return currentHash;
-}
-
 const float MAX_LOAD_FACTOR = 0.7;
 
 float getLoadFactor(HashTable* hashTable)
 {
     return (float)hashTable->elementCount / (float)hashTable->bucketCount;
-}
-
-int getNewIndex(int hash, int attempt, int module)
-{
-    return (hash + (attempt + attempt * attempt) / 2) % module;
 }
 
 int findPositionToPush(HashTable* table, HashElement* element);
@@ -121,22 +112,23 @@ void pushElement(HashTable* table, HashElement* element)
 
 int findPositionToPush(HashTable* table, HashElement* element)
 {
-    int hash = getHash(element->key, table->polynomFactor, table->bucketCount);
+    int hash = table->getHash(element->key, table->polynomFactor, table->bucketCount);
     int currentIndex = hash;
     for (int attempt = 1; attempt <= table->bucketCount; ++attempt) {
         if (table->types[currentIndex] == used) {
             if (strcmp(table->hashTable[currentIndex]->key, element->key) == 0) {
                 if (attempt > table->hashTable[currentIndex]->attemptsToPush)
                     table->hashTable[currentIndex]->attemptsToPush = attempt;
-                return currentIndex;
+                break;
             }
-            currentIndex = getNewIndex(hash, attempt, table->bucketCount);
+            currentIndex = table->getNewIndex(hash, attempt, table->bucketCount);
         } else {
             if (attempt > element->attemptsToPush)
                 element->attemptsToPush = attempt;
-            return currentIndex;
+            break;
         }
     }
+    return currentIndex;
 }
 
 void expandHashTable(HashTable* table)
@@ -145,7 +137,7 @@ void expandHashTable(HashTable* table)
     enum CellType* oldTypes = table->types;
     int oldSize = table->bucketCount;
     int size = table->bucketCount * 2;
-    initializeHashTable(table, size, table->polynomFactor);
+    initializeHashTable(table, size, table->polynomFactor, table->getHash, table->getNewIndex);
 
     for (int i = 0; i < oldSize; ++i) {
         if (oldTypes[i] != used)
@@ -164,7 +156,7 @@ void pushByKey(HashTable* table, char* key)
 
 bool deleteElement(HashTable* table, char* key)
 {
-    int hash = getHash(key, table->polynomFactor, table->bucketCount);
+    int hash = table->getHash(key, table->polynomFactor, table->bucketCount);
     int currentIndex = hash;
     for (int i = 0; i < table->bucketCount; ++i) {
         if (table->types[currentIndex] == empty)
@@ -181,7 +173,7 @@ bool deleteElement(HashTable* table, char* key)
                     return true;
                 }
             }
-            currentIndex = getNewIndex(hash, i, table->bucketCount);
+            currentIndex = table->getNewIndex(hash, i, table->bucketCount);
         }
     }
 
@@ -262,7 +254,7 @@ void printTheMostCommonElements(HashTable* table, int numberOfElements)
             }
         }
         isElementSelected[hashOfMostCommon] = true;
-        printf("%d. %s\n", i, table->hashTable[hashOfMostCommon]->key);
+        printf("%d. %s (%d times)\n", i, table->hashTable[hashOfMostCommon]->key, table->hashTable[hashOfMostCommon]->amount);
     }
 
     free(isElementSelected);

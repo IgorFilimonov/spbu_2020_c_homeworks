@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char* readNextWord(FILE* inputText, bool* isEndOfFileReached)
 {
@@ -17,6 +18,7 @@ char* readNextWord(FILE* inputText, bool* isEndOfFileReached)
         if (realSize == maxSize) {
             maxSize *= 2;
             word = (char*)realloc(word, maxSize);
+            memset(&word[realSize], '\0', maxSize - realSize);
         }
         currentChar = fgetc(inputText);
     }
@@ -29,6 +31,19 @@ char* readNextWord(FILE* inputText, bool* isEndOfFileReached)
     return word;
 }
 
+int getHash(char* key, int polynomFactor, int module)
+{
+    int currentHash = 0;
+    for (int i = 0; i < strlen(key); ++i)
+        currentHash = ((currentHash * polynomFactor) + (key[i] - 'a')) % module;
+    return currentHash;
+}
+
+int getNewIndex(int hash, int attempt, int module)
+{
+    return (hash + (attempt + attempt * attempt) / 2) % module;
+}
+
 int main()
 {
     FILE* inputText = fopen("../homework6/text.txt", "r");
@@ -37,7 +52,7 @@ int main()
         return 0;
     }
 
-    HashTable* hashTable = createHashTable(2);
+    HashTable* hashTable = createHashTable(2, getHash, getNewIndex);
     bool isEndOfFileReached = false;
     while (!isEndOfFileReached) {
         char* word = readNextWord(inputText, &isEndOfFileReached);

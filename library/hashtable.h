@@ -5,9 +5,9 @@
 
 typedef struct HashTable HashTable;
 
-HashTable* createHashTableWithSize(int size, int polynomFactor);
+HashTable* createHashTableWithSize(int size, int polynomFactor, int (*getHash)(char*, int, int), int (*getNextIndex)(int, int, int));
 
-HashTable* createHashTable(int polynomFactor);
+HashTable* createHashTable(int polynomFactor, int (*getHash)(char*, int, int), int (*getNewIndex)(int, int, int));
 
 void destroyHashTable(HashTable* table);
 

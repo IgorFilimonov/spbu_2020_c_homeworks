@@ -35,4 +35,8 @@ ListElement* getNextElement(ListElement* element);
 
 bool makeListCyclical(List* list);
 
+int getValue(ListElement* element);
+
+ListElement* getPreviousElement(ListElement* element);
+
 #endif //LIST_LIST_H

@@ -39,4 +39,6 @@ int getValue(ListElement* element);
 
 int getSize(List* list);
 
+ListElement* getPreviousElement(ListElement* element);
+
 #endif //LIST_LIST_H

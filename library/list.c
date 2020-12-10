@@ -6,6 +6,7 @@
 struct ListElement {
     int value;
     ListElement* next;
+    ListElement* previous;
 };
 
 struct List {
@@ -30,6 +31,7 @@ ListElement* createListElement(int value)
     ListElement* element = (ListElement*)malloc(sizeof(ListElement));
     element->value = value;
     element->next = NULL;
+    element->previous = NULL;
     return element;
 }
 
@@ -89,15 +91,22 @@ bool insert(ListElement* value, int position, List* list)
         value->next = head(list);
         if (value->next == NULL)
             list->tail = value;
+        else
+            head(list)->previous = value;
         list->head = value;
         list->size++;
-        if (list->isCyclical)
+        if (list->isCyclical) {
             tail(list)->next = head(list);
+            value->previous = tail(list);
+        }
         return true;
     }
 
     ListElement* previous = retrieve(position - 1, list);
     value->next = previous->next;
+    value->previous = previous;
+    if (previous->next != NULL)
+        previous->next->previous = value;
     if (previous == tail(list))
         list->tail = value;
     previous->next = value;
@@ -132,8 +141,11 @@ bool deleteFromList(int position, List* list)
             list->tail = NULL;
         removeListElement(oldHead);
         list->size--;
-        if (list->isCyclical && tail(list) != NULL)
+        if (list->isCyclical && tail(list) != NULL) {
             tail(list)->next = head(list);
+            head(list)->previous = tail(list);
+        } else
+            head(list)->previous = NULL;
         return true;
     }
 
@@ -143,9 +155,12 @@ bool deleteFromList(int position, List* list)
         list->tail = previous;
     removeListElement(previous->next);
     previous->next = next;
+    next->previous = previous;
     list->size--;
-    if (list->isCyclical)
+    if (list->isCyclical) {
         tail(list)->next = head(list);
+        head(list)->previous = tail(list);
+    }
     return true;
 }
 
@@ -173,15 +188,23 @@ bool makeListCyclical(List* list)
         return false;
     list->isCyclical = true;
     tail(list)->next = head(list);
+    head(list)->previous = tail(list);
     return true;
 }
 
 int getValue(ListElement* element)
 {
-    return element->value;
+    if (element != NULL)
+        return element->value;
 }
 
 int getSize(List* list)
 {
     return list->size;
+}
+
+ListElement* getPreviousElement(ListElement* element)
+{
+    if (element != NULL)
+        return element->previous;
 }

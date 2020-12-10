@@ -1,6 +1,7 @@
 #include "graph.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct Edge {
     int start;
@@ -113,4 +114,30 @@ void destroyGraph(Graph* graph)
     for (int i = 0; i < graph->countVertex; ++i)
         free(graph->matrix[i]);
     free(graph);
+}
+
+void findComponentsRecursive(Graph* graph, int currentVertex, int** componentNumbers, int currentComponent);
+
+int* findComponents(Graph* graph)
+{
+    int* componentNumbers = (int*)malloc(graph->countVertex * sizeof(int));
+    memset(componentNumbers, -1, graph->countVertex * sizeof(int));
+    int currentComponent = 0;
+    for (int i = 0; i < graph->countVertex; ++i) {
+        if (componentNumbers[i] == -1) {
+            findComponentsRecursive(graph, i, &componentNumbers, currentComponent);
+            ++currentComponent;
+        }
+    }
+
+    return componentNumbers;
+}
+
+void findComponentsRecursive(Graph* graph, int currentVertex, int** componentNumbers, int currentComponent)
+{
+    (*componentNumbers)[currentVertex] = currentComponent;
+    for (int i = 0; i < graph->countVertex; ++i) {
+        if (graph->matrix[currentVertex][i] != 0 && (*componentNumbers)[i] == -1)
+            findComponentsRecursive(graph, i, componentNumbers, currentComponent);
+    }
 }

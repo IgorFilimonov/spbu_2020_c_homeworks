@@ -1,6 +1,6 @@
+#include "../commonUtils/numericOperations.h"
 #include "avl.h"
 #include "bst_node.h"
-#include "../commonUtils/numericOperations.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

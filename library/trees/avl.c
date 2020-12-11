@@ -1,6 +1,5 @@
 #include "avl.h"
 #include "bst_node.h"
-#include "../commonUtils/numericOperations.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,7 +25,9 @@ void updateHeight(TreeNode* node)
     if (node != NULL) {
         int leftChildHeight = getHeight(node->leftChild);
         int rightChildHeight = getHeight(node->rightChild);
-        node->height = max(leftChildHeight, rightChildHeight) + 1;
+        node->height = leftChildHeight + 1;
+        if (node->height < rightChildHeight + 1)
+            node->height = rightChildHeight + 1;
     }
 }
 

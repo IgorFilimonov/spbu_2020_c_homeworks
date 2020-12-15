@@ -99,6 +99,11 @@ bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, TreeNode*
     if (node->value > value)
         return deleteValueRecursive(node->leftChild, value, node, newRoot, nodeForBalancing);
 
+    if (node->amount != 1) {
+        node->amount--;
+        return false; // no need to balance
+    }
+
     if (node->leftChild != NULL && node->rightChild != NULL) {
         TreeNode* maximumOfSmallerNodes = node->leftChild;
         TreeNode* maximumOfSmallerNodesParent = node;

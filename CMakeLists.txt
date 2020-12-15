@@ -55,3 +55,6 @@ target_link_libraries(task6_1 hashtable library)
 
 add_executable(task7_1 homework7/task1.c)
 target_link_libraries(task7_1 graph)
+
+add_executable(task1_t3 test3/task1.c)
+target_link_libraries(task1_t3 avl)

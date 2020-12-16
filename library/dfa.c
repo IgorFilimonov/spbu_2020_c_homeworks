@@ -6,6 +6,7 @@
 typedef struct Transition {
     char symbol;
     DFAState* transitionState;
+    bool isNeededToDestroy;
 } Transition;
 
 struct DFAState {
@@ -26,6 +27,7 @@ Transition* createTransition(char symbol, DFAState* transitionState)
     Transition* transition = (Transition*)malloc(sizeof(Transition));
     transition->symbol = symbol;
     transition->transitionState = transitionState;
+    transition->isNeededToDestroy = true;
 
     return transition;
 }
@@ -85,22 +87,35 @@ bool isStringCorrect(char* string, DFA* dfa)
     return currentDfaState->isFinal;
 }
 
+void findTransitionsToViewedStates(DFAState* dfaState);
+
 void destroyDFARecursive(DFAState* dfaState);
 
 void destroyDFA(DFA* dfa)
 {
+    findTransitionsToViewedStates(dfa->initialState);
     destroyDFARecursive(dfa->initialState);
     destroyDFAState(dfa->failState);
     free(dfa);
 }
 
-void destroyDFARecursive(DFAState* dfaState)
+void findTransitionsToViewedStates(DFAState* dfaState)
 {
     dfaState->isViewedOnDeletion = true;
     for (int i = 0; i < dfaState->transitionsSize; ++i) {
         DFAState* transitionState = dfaState->transitions[i]->transitionState;
         if (!transitionState->isViewedOnDeletion)
-            destroyDFARecursive(transitionState);
+            findTransitionsToViewedStates(transitionState);
+        else
+            dfaState->transitions[i]->isNeededToDestroy = false;
+    }
+}
+
+void destroyDFARecursive(DFAState* dfaState)
+{
+    for (int i = 0; i < dfaState->transitionsSize; ++i) {
+        if (dfaState->transitions[i]->isNeededToDestroy)
+            destroyDFARecursive(dfaState->transitions[i]->transitionState);
     }
     destroyDFAState(dfaState);
 }

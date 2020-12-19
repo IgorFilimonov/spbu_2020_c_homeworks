@@ -21,7 +21,7 @@ DFA* initializeDFA()
         addTransition(plusState, numberState, (char)(i));
         addTransition(minusState, numberState, (char)(i));
         addTransition(numberState, numberState, (char)(i));
-        addTransition(dotState, initialState, (char)(i));
+        addTransition(dotState, numberState, (char)(i));
     }
 
     return dfa;

@@ -34,7 +34,7 @@ Transition* createTransition(char symbol, DFAState* transitionState)
 
 DFA* createDFA(DFAState* initialState)
 {
-    DFA* dfa = (DFA*)malloc(sizeof(DFA*));
+    DFA* dfa = (DFA*)malloc(sizeof(DFA));
     dfa->initialState = initialState;
     dfa->failState = createDFAState(false);
 
@@ -122,7 +122,7 @@ void destroyDFARecursive(DFAState* dfaState)
 
 void destroyDFAState(DFAState* dfaState)
 {
-    for (int i = 0; i < dfaState->transitionAllocationSize; ++i)
+    for (int i = 0; i < dfaState->transitionsSize; ++i)
         free(dfaState->transitions[i]);
     free(dfaState->transitions);
     free(dfaState);

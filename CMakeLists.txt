@@ -8,13 +8,14 @@ set(SOURCE_LIB
         library/commonUtils/arrayOperations.c
 )
 
-add_library(complexNumber library/complexNumber.c)
 add_library(library ${SOURCE_LIB})
 add_library(list library/list.c)
 add_library(stack library/stack.c)
+add_library(complexNumber library/complexNumber.c)
 add_library(avl library/bst_node.c library/avl.c)
-add_library(graph library/graph.c)
 add_library(hashtable library/hashtable.c)
+add_library(graph library/graph.c)
+add_library(parser library/parser/parser.c library/dfa.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)
@@ -55,3 +56,6 @@ target_link_libraries(task6_1 hashtable library)
 
 add_executable(task7_1 homework7/task1.c)
 target_link_libraries(task7_1 graph)
+
+add_executable(task9_1 homework9/task1.c)
+target_link_libraries(task9_1 parser library)

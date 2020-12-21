@@ -1,6 +1,7 @@
 #include "arrayOperations.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 char* readString()
 {
@@ -12,6 +13,7 @@ char* readString()
         if (realSize == maxSize) {
             maxSize *= 2;
             string = (char*)realloc(string, maxSize);
+            memset(&string[realSize], 0, maxSize - realSize);
         }
 
         string[realSize] = currentChar;

@@ -141,3 +141,8 @@ void findComponentsRecursive(Graph* graph, int currentVertex, int** componentNum
             findComponentsRecursive(graph, i, componentNumbers, currentComponent);
     }
 }
+
+int getNumberOfVertex(Graph* graph)
+{
+    return graph->countVertex;
+}

@@ -56,11 +56,13 @@ target_link_libraries(task6_1 hashtable library)
 
 add_executable(task7_1 homework7/task1.c)
 target_link_libraries(task7_1 graph)
+
 add_executable(task7_2 homework7/task2.c)
 target_link_libraries(task7_2 graph list)
 
 add_executable(task2_t2 test2/task2.c)
+add_executable(task3_t2 test2/task3.c)
+target_link_libraries(task3_t2 graph)
 
 add_executable(task8_1 homework8/task1.c)
 target_link_libraries(task8_1 library dfa)
-

@@ -25,4 +25,6 @@ void destroyGraph(Graph* graph);
 
 int* findComponents(Graph* graph);
 
+int getNumberOfVertex(Graph* graph);
+
 #endif //SPBU_2020_C_HOMEWORKS_GRAPH_H

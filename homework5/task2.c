@@ -1,4 +1,4 @@
-#include "../library/avl.h"
+#include "../library/trees/avl.h"
 #include <stdio.h>
 
 void displayHints()

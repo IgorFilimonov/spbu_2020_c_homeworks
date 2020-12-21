@@ -198,6 +198,11 @@ int getValue(ListElement* element)
         return element->value;
 }
 
+int getSize(List* list)
+{
+    return list->size;
+}
+
 ListElement* getPreviousElement(ListElement* element)
 {
     if (element != NULL)

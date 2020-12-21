@@ -17,12 +17,14 @@ bool isConnected(int firstVertex, int secondVertex, Graph* graph);
 
 bool isCycled(Graph* graph);
 
-bool findNearestVacantVertex(Graph* graph, int vertex, bool* isVertexVacant, int* nearestVacantVertex, int* distanceToNearestVertex);
+int findNearestVacantVertex(int vertex, Graph* graph, bool* isVertexVacant, int* distanceToNearestVertex);
 
 void destroyEdge(Edge* edge);
 
 void destroyGraph(Graph* graph);
 
 int* findComponents(Graph* graph);
+
+int getNumberOfVertex(Graph* graph);
 
 #endif //SPBU_2020_C_HOMEWORKS_GRAPH_H

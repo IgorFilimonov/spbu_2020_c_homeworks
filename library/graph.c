@@ -88,20 +88,20 @@ bool isCycled(Graph* graph)
     return isCycled;
 }
 
-bool findNearestVacantVertex(Graph* graph, int vertex, bool* isVertexVacant, int* nearestVacantVertex, int* distanceToNearestVertex)
+int findNearestVacantVertex(int vertex, Graph* graph, bool* isVertexVacant, int* distanceToNearestVertex)
 {
-    *nearestVacantVertex = -1;
+    int nearestVacantVertex = -1;
     *distanceToNearestVertex = 0;
     for (int i = 0; i < graph->countVertex; ++i) {
         if (graph->matrix[vertex][i] != 0 && isVertexVacant[i]) {
-            if (*nearestVacantVertex == -1 || graph->matrix[vertex][i] < *distanceToNearestVertex) {
-                *nearestVacantVertex = i;
+            if (nearestVacantVertex == -1 || graph->matrix[vertex][i] < *distanceToNearestVertex) {
+                nearestVacantVertex = i;
                 *distanceToNearestVertex = graph->matrix[vertex][i];
             }
         }
     }
 
-    return *nearestVacantVertex != -1;
+    return nearestVacantVertex;
 }
 
 void destroyEdge(Edge* edge)
@@ -140,4 +140,9 @@ void findComponentsRecursive(Graph* graph, int currentVertex, int** componentNum
         if (graph->matrix[currentVertex][i] != 0 && (*componentNumbers)[i] == -1)
             findComponentsRecursive(graph, i, componentNumbers, currentComponent);
     }
+}
+
+int getNumberOfVertex(Graph* graph)
+{
+    return graph->countVertex;
 }

@@ -56,7 +56,6 @@ int main()
     char* string = readString();
 
     DFA* dfa = initializeDFA();
-
     if (isStringCorrect(string, dfa))
         printf("This string is valid");
     else

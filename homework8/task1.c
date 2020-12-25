@@ -34,7 +34,7 @@ int main()
 
     DFA* dfa = initializeDFA();
 
-    if (isStringCorrect(string, dfa))
+    if (isCorrectForDFA(string, dfa))
         printf("This is a real number");
     else
         printf("This isn't a real number");

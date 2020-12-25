@@ -33,6 +33,13 @@ bool T(Token** tokens, int size, int* current);
 bool E1(Token** tokens, int size, int* current);
 bool T1(Token** tokens, int size, int* current);
 
+/*
+ * E -> T E1
+ * E1 -> + T E1 | - T E1 | eps
+ * T -> num T1
+ * T1 -> * num T1 | / num T1 | eps
+ */
+
 bool E(Token** tokens, int size, int* current)
 {
     return T(tokens, size, current) && E1(tokens, size, current);
@@ -85,6 +92,12 @@ bool T1(Token** tokens, int size, int* current)
 
 Token** getTokens(char* string, int* countTokens, bool* isAllCorrect);
 
+char* getTokenValue(char* string);
+
+DFA* initializeDFA();
+
+bool isOperation(char* string);
+
 bool isCorrectForParser(char* string)
 {
     int countTokens = 0;
@@ -106,12 +119,6 @@ bool isCorrectForParser(char* string)
     else
         return result;
 }
-
-char* getTokenValue(char* string);
-
-DFA* initializeDFA();
-
-bool isOperation(char* string);
 
 Token** getTokens(char* string, int* countTokens, bool* isAllCorrect)
 {

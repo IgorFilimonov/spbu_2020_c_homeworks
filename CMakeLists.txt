@@ -8,15 +8,15 @@ set(SOURCE_LIB
         library/commonUtils/arrayOperations.c
 )
 
-add_library(complexNumber library/complexNumber.c)
 add_library(library ${SOURCE_LIB})
 add_library(list library/list.c)
 add_library(stack library/stack.c)
+add_library(complexNumber library/complexNumber.c)
 add_library(avl library/trees/bst_node.c library/trees/avl.c)
 add_library(hashtable library/hashtable.c)
-add_library(matrix library/matrix.c)
 add_library(graph library/graph.c)
 add_library(dfa library/dfa.c)
+add_library(matrix library/matrix.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)
@@ -51,6 +51,9 @@ add_executable(task5_2 homework5/task2.c)
 target_link_libraries(task5_2 avl library)
 
 add_executable(task1_t2 test2/task1.c)
+add_executable(task2_t2 test2/task2.c)
+add_executable(task3_t2 test2/task3.c)
+target_link_libraries(task3_t2 graph)
 
 add_executable(task6_1 homework6/task1.c)
 target_link_libraries(task6_1 hashtable library)
@@ -60,13 +63,11 @@ target_link_libraries(task7_1 graph)
 add_executable(task7_2 homework7/task2.c)
 target_link_libraries(task7_2 graph list)
 
-add_executable(task2_t2 test2/task2.c)
-add_executable(task3_t2 test2/task3.c)
-target_link_libraries(task3_t2 graph)
-
 add_executable(task8_1 homework8/task1.c)
 target_link_libraries(task8_1 library dfa)
 
+add_executable(task1_t3 test3/task1.c)
+target_link_libraries(task1_t3 avl)
 add_executable(task2_t3 test3/task2.c)
 target_link_libraries(task2_t3 matrix)
 add_executable(task3_t3 test3/task3.c)

@@ -10,13 +10,16 @@ TreeNode* createTreeNode(int value)
     newNode->height = 1;
     newNode->leftChild = NULL;
     newNode->rightChild = NULL;
+    newNode->amount = 1;
     return newNode;
 }
 
 bool addValueRecursive(TreeNode* node, int value)
 {
-    if (node->value == value)
-        return false;
+    if (node->value == value) {
+        node->amount++;
+        return false; // no need to balance
+    }
 
     if (node->value < value) {
         if (node->rightChild == NULL) {
@@ -41,7 +44,7 @@ void printTreeInAscendingOrderRecursive(TreeNode* node)
         return;
 
     printTreeInAscendingOrderRecursive(node->leftChild);
-    printf("%d ", node->value);
+    printf("%d met %d times\n", node->value, node->amount);
     printTreeInAscendingOrderRecursive(node->rightChild);
 }
 
@@ -95,6 +98,11 @@ bool deleteValueRecursive(TreeNode* node, int value, TreeNode* parent, TreeNode*
         return deleteValueRecursive(node->rightChild, value, node, newRoot, nodeForBalancing);
     if (node->value > value)
         return deleteValueRecursive(node->leftChild, value, node, newRoot, nodeForBalancing);
+
+    if (node->amount != 1) {
+        node->amount--;
+        return false; // no need to balance
+    }
 
     if (node->leftChild != NULL && node->rightChild != NULL) {
         TreeNode* maximumOfSmallerNodes = node->leftChild;

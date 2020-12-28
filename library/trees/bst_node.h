@@ -8,6 +8,7 @@ typedef struct TreeNode {
     int height;
     struct TreeNode* leftChild;
     struct TreeNode* rightChild;
+    int amount;
 } TreeNode;
 
 TreeNode* createTreeNode(int value);

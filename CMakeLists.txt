@@ -69,3 +69,5 @@ target_link_libraries(task8_1 library dfa)
 
 add_executable(task2_t3 test3/task2.c)
 target_link_libraries(task2_t3 matrix)
+add_executable(task3_t3 test3/task3.c)
+target_link_libraries(task3_t3 library dfa)

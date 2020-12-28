@@ -13,7 +13,7 @@ DFAState* createDFAState(bool isFinal);
 
 void addTransition(DFAState* firstState, DFAState* secondState, char symbol);
 
-bool isStringCorrect(char* string, DFA* dfa);
+bool isCorrectForDFA(char* string, DFA* dfa);
 
 void destroyDFA(DFA* dfa);
 

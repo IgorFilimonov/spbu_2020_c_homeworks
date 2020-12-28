@@ -68,7 +68,7 @@ void addTransition(DFAState* firstState, DFAState* secondState, char symbol)
     firstState->transitionsSize++;
 }
 
-bool isStringCorrect(char* string, DFA* dfa)
+bool isCorrectForDFA(char* string, DFA* dfa)
 {
     DFAState* currentDfaState = dfa->initialState;
     for (int i = 0; i < strlen(string); ++i) {

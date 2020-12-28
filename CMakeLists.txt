@@ -17,6 +17,7 @@ add_library(hashtable library/hashtable.c)
 add_library(graph library/graph.c)
 add_library(dfa library/dfa.c)
 add_library(matrix library/matrix.c)
+add_library(parser library/parser.c library/dfa.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)
@@ -70,5 +71,9 @@ add_executable(task1_t3 test3/task1.c)
 target_link_libraries(task1_t3 avl)
 add_executable(task2_t3 test3/task2.c)
 target_link_libraries(task2_t3 matrix)
+
+add_executable(task9_1 homework9/task1.c)
+target_link_libraries(task9_1 parser library)
+
 add_executable(task3_t3 test3/task3.c)
 target_link_libraries(task3_t3 library dfa)

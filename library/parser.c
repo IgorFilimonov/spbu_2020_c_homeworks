@@ -1,5 +1,5 @@
-#include "dfa.h"
 #include "parser.h"
+#include "dfa.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>

@@ -1,5 +1,5 @@
 #include "../library/commonUtils/arrayOperations.h"
-#include "../library/parser/parser.h"
+#include "../library/parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 

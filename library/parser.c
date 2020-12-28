@@ -1,5 +1,5 @@
+#include "dfa.h"
 #include "parser.h"
-#include "../dfa.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,7 +51,7 @@ bool T(Token** tokens, int size, int* current)
         return true;
     int position = *current;
     if (tokens[*current]->type == number) {
-        *current++;
+        ++(*current);
         if (T1(tokens, size, current))
             return true;
         *current = position;
@@ -65,7 +65,7 @@ bool E1(Token** tokens, int size, int* current)
         return true;
     int position = *current;
     if (strcmp(tokens[*current]->value, "+") == 0 || strcmp(tokens[*current]->value, "-") == 0) {
-        (*current)++;
+        ++(*current);
         if (T(tokens, size, current) && E1(tokens, size, current))
             return true;
         *current = position;
@@ -79,9 +79,9 @@ bool T1(Token** tokens, int size, int* current)
         return true;
     int position = *current;
     if (strcmp(tokens[*current]->value, "*") == 0 || strcmp(tokens[*current]->value, "/") == 0) {
-        *current++;
+        ++(*current);
         if (tokens[*current]->type == number) {
-            *current++;
+            ++(*current);
             if (T1(tokens, size, current))
                 return true;
         }
@@ -107,7 +107,7 @@ bool isCorrectForParser(char* string)
     bool result = false;
     if (isAllCorrect) {
         int current = 0;
-        result = E(tokens, countTokens, &current) & current == countTokens;
+        result = E(tokens, countTokens, &current) & (current == countTokens);
     }
 
     for (int i = 0; i < countTokens; ++i)
@@ -135,6 +135,7 @@ Token** getTokens(char* string, int* countTokens, bool* isAllCorrect)
             tokens[*countTokens] = createToken(number, tokenValue);
         } else
             tokens[*countTokens] = createToken(operation, tokenValue);
+        ++(*countTokens);
         index += strlen(tokenValue) + 1;
     }
 

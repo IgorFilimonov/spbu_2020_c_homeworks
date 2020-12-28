@@ -17,7 +17,7 @@ add_library(hashtable library/hashtable.c)
 add_library(graph library/graph.c)
 add_library(dfa library/dfa.c)
 add_library(matrix library/matrix.c)
-add_library(parser library/parser/parser.c library/dfa.c)
+add_library(parser library/parser.c library/dfa.c)
 
 add_executable(task1_1 homework1/task1.c)
 add_executable(task1_2 homework1/task2.c)

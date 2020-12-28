@@ -63,10 +63,12 @@ target_link_libraries(task7_1 graph)
 add_executable(task7_2 homework7/task2.c)
 target_link_libraries(task7_2 graph list)
 
+add_executable(task8_1 homework8/task1.c)
+target_link_libraries(task8_1 library dfa)
+
 add_executable(task1_t3 test3/task1.c)
 target_link_libraries(task1_t3 avl)
 add_executable(task2_t3 test3/task2.c)
 target_link_libraries(task2_t3 matrix)
-
-add_executable(task8_1 homework8/task1.c)
-target_link_libraries(task8_1 library dfa)
+add_executable(task3_t3 test3/task3.c)
+target_link_libraries(task3_t3 library dfa)

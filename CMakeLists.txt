@@ -35,6 +35,8 @@ add_executable(task2_4 homework2/task4.c)
 target_link_libraries(task2_4 library)
 add_executable(task2_5 homework2/task5.c)
 
+add_executable(task3_1 homework3/task1.c)
+target_link_libraries(task3_1 list)
 add_executable(task3_2 homework3/task2.c)
 target_link_libraries(task3_2 list)
 
@@ -71,9 +73,8 @@ add_executable(task1_t3 test3/task1.c)
 target_link_libraries(task1_t3 avl)
 add_executable(task2_t3 test3/task2.c)
 target_link_libraries(task2_t3 matrix)
+add_executable(task3_t3 test3/task3.c)
+target_link_libraries(task3_t3 library dfa)
 
 add_executable(task9_1 homework9/task1.c)
 target_link_libraries(task9_1 parser library)
-
-add_executable(task3_t3 test3/task3.c)
-target_link_libraries(task3_t3 library dfa)
